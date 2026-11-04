@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="908673848271449e9f71d8bab59bbb9f" Name="Diagram1" ZoomLevel="64">
+        <EntityTypeShape EntityType="VocabMasterDBModel.ExternalLogin" Width="1.5" PointX="3" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="VocabMasterDBModel.QuestionOption" Width="1.5" PointX="6" PointY="19.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="VocabMasterDBModel.Question" Width="1.5" PointX="3.75" PointY="19.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="VocabMasterDBModel.QuizAttemptAnswer" Width="1.5" PointX="8.25" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="VocabMasterDBModel.QuizAttempt" Width="1.5" PointX="6" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="VocabMasterDBModel.Quizze" Width="1.5" PointX="3.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="VocabMasterDBModel.Topic" Width="1.5" PointX="1.5" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="VocabMasterDBModel.UserDailyActivity" Width="1.5" PointX="3" PointY="12.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="VocabMasterDBModel.UserLearningSetting" Width="1.5" PointX="3" PointY="15.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="VocabMasterDBModel.User" Width="1.5" PointX="0.75" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="VocabMasterDBModel.UserVocabularyProgress" Width="1.5" PointX="3" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="VocabMasterDBModel.Vocabulary" Width="1.5" PointX="0.75" PointY="12.625" IsExpanded="true" />
+        <AssociationConnector Association="VocabMasterDBModel.FK_ExternalLogins_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="VocabMasterDBModel.FK_QuestionOptions_Questions" ManuallyRouted="false" />
+        <AssociationConnector Association="VocabMasterDBModel.FK_QuizAttemptAnswers_Options" ManuallyRouted="false" />
+        <AssociationConnector Association="VocabMasterDBModel.FK_Questions_Quizzes" ManuallyRouted="false" />
+        <AssociationConnector Association="VocabMasterDBModel.FK_QuizAttemptAnswers_Questions" ManuallyRouted="false" />
+        <AssociationConnector Association="VocabMasterDBModel.FK_QuizAttemptAnswers_Attempts" ManuallyRouted="false" />
+        <AssociationConnector Association="VocabMasterDBModel.FK_QuizAttempts_Quizzes" ManuallyRouted="false" />
+        <AssociationConnector Association="VocabMasterDBModel.FK_QuizAttempts_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="VocabMasterDBModel.FK_Quizzes_Topics" ManuallyRouted="false" />
+        <AssociationConnector Association="VocabMasterDBModel.FK_Vocabulary_Topics" ManuallyRouted="false" />
+        <AssociationConnector Association="VocabMasterDBModel.FK_UserDailyActivity_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="VocabMasterDBModel.FK_UserLearningSettings_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="VocabMasterDBModel.FK_UserVocabularyProgress_Users" ManuallyRouted="false" />
+        <AssociationConnector Association="VocabMasterDBModel.FK_UserVocabularyProgress_Vocabulary" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

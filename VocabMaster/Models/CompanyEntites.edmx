@@ -1,0 +1,997 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="VocabMasterDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ExternalLogins">
+          <Key>
+            <PropertyRef Name="ExternalLoginId" />
+          </Key>
+          <Property Name="ExternalLoginId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Provider" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ProviderUserId" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="QuestionOptions">
+          <Key>
+            <PropertyRef Name="OptionId" />
+          </Key>
+          <Property Name="OptionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QuestionId" Type="int" Nullable="false" />
+          <Property Name="OptionLabel" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="OptionText" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="IsCorrect" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Questions">
+          <Key>
+            <PropertyRef Name="QuestionId" />
+          </Key>
+          <Property Name="QuestionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QuizId" Type="int" Nullable="false" />
+          <Property Name="QuestionText" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Explanation" Type="nvarchar" MaxLength="1000" />
+          <Property Name="SortOrder" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="QuizAttemptAnswers">
+          <Key>
+            <PropertyRef Name="AttemptAnswerId" />
+          </Key>
+          <Property Name="AttemptAnswerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AttemptId" Type="int" Nullable="false" />
+          <Property Name="QuestionId" Type="int" Nullable="false" />
+          <Property Name="SelectedOptionId" Type="int" />
+          <Property Name="IsCorrect" Type="bit" Nullable="false" />
+          <Property Name="AnsweredAt" Type="datetime2" Precision="7" />
+        </EntityType>
+        <EntityType Name="QuizAttempts">
+          <Key>
+            <PropertyRef Name="AttemptId" />
+          </Key>
+          <Property Name="AttemptId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="QuizId" Type="int" Nullable="false" />
+          <Property Name="StartedAt" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="CompletedAt" Type="datetime2" Precision="7" />
+          <Property Name="CorrectCount" Type="int" Nullable="false" />
+          <Property Name="TotalQuestions" Type="int" Nullable="false" />
+          <Property Name="Score" Type="decimal" Precision="5" Scale="2" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Quizzes">
+          <Key>
+            <PropertyRef Name="QuizId" />
+          </Key>
+          <Property Name="QuizId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TopicId" Type="int" />
+          <Property Name="QuizTitle" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+          <Property Name="QuestionCount" Type="int" Nullable="false" />
+          <Property Name="TimeLimitSeconds" Type="int" />
+          <Property Name="Status" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Topics">
+          <Key>
+            <PropertyRef Name="TopicId" />
+          </Key>
+          <Property Name="TopicId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TopicName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="IconUrl" Type="nvarchar" MaxLength="500" />
+          <Property Name="SortOrder" Type="int" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserDailyActivity">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="ActivityDate" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="ActivityDate" Type="date" Nullable="false" />
+          <Property Name="WordsLearned" Type="int" Nullable="false" />
+          <Property Name="QuizCount" Type="int" Nullable="false" />
+          <Property Name="CorrectAnswers" Type="int" Nullable="false" />
+          <Property Name="StudyMinutes" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserLearningSettings">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="DailyWordGoal" Type="int" Nullable="false" />
+          <Property Name="ReminderEnabled" Type="bit" Nullable="false" />
+          <Property Name="ReminderTime" Type="time" Precision="7" />
+          <Property Name="SoundEnabled" Type="bit" Nullable="false" />
+          <Property Name="UpdatedAt" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="100" />
+          <Property Name="AvatarUrl" Type="nvarchar" MaxLength="500" />
+          <Property Name="Role" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="LastLoginAt" Type="datetime2" Precision="7" />
+        </EntityType>
+        <EntityType Name="UserVocabularyProgress">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="VocabularyId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="VocabularyId" Type="int" Nullable="false" />
+          <Property Name="IsLearned" Type="bit" Nullable="false" />
+          <Property Name="IsBookmarked" Type="bit" Nullable="false" />
+          <Property Name="TimesReviewed" Type="int" Nullable="false" />
+          <Property Name="LastReviewedAt" Type="datetime2" Precision="7" />
+          <Property Name="LearnedAt" Type="datetime2" Precision="7" />
+        </EntityType>
+        <EntityType Name="Vocabulary">
+          <Key>
+            <PropertyRef Name="VocabularyId" />
+          </Key>
+          <Property Name="VocabularyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TopicId" Type="int" Nullable="false" />
+          <Property Name="EnglishWord" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="PartOfSpeech" Type="nvarchar" MaxLength="50" />
+          <Property Name="VietnameseMeaning" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Pronunciation" Type="nvarchar" MaxLength="255" />
+          <Property Name="ExampleSentence" Type="nvarchar" MaxLength="1000" />
+          <Property Name="ExampleMeaning" Type="nvarchar" MaxLength="1000" />
+          <Property Name="ImageUrl" Type="nvarchar" MaxLength="500" />
+          <Property Name="AudioUrl" Type="nvarchar" MaxLength="500" />
+          <Property Name="Status" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CreatedAt" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ExternalLogins_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="ExternalLogins" Type="Self.ExternalLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ExternalLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuestionOptions_Questions">
+          <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
+          <End Role="QuestionOptions" Type="Self.QuestionOptions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Questions">
+              <PropertyRef Name="QuestionId" />
+            </Principal>
+            <Dependent Role="QuestionOptions">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Questions_Quizzes">
+          <End Role="Quizzes" Type="Self.Quizzes" Multiplicity="1" />
+          <End Role="Questions" Type="Self.Questions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Quizzes">
+              <PropertyRef Name="QuizId" />
+            </Principal>
+            <Dependent Role="Questions">
+              <PropertyRef Name="QuizId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuizAttemptAnswers_Attempts">
+          <End Role="QuizAttempts" Type="Self.QuizAttempts" Multiplicity="1" />
+          <End Role="QuizAttemptAnswers" Type="Self.QuizAttemptAnswers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="QuizAttempts">
+              <PropertyRef Name="AttemptId" />
+            </Principal>
+            <Dependent Role="QuizAttemptAnswers">
+              <PropertyRef Name="AttemptId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuizAttemptAnswers_Options">
+          <End Role="QuestionOptions" Type="Self.QuestionOptions" Multiplicity="0..1" />
+          <End Role="QuizAttemptAnswers" Type="Self.QuizAttemptAnswers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="QuestionOptions">
+              <PropertyRef Name="OptionId" />
+            </Principal>
+            <Dependent Role="QuizAttemptAnswers">
+              <PropertyRef Name="SelectedOptionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuizAttemptAnswers_Questions">
+          <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
+          <End Role="QuizAttemptAnswers" Type="Self.QuizAttemptAnswers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Questions">
+              <PropertyRef Name="QuestionId" />
+            </Principal>
+            <Dependent Role="QuizAttemptAnswers">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuizAttempts_Quizzes">
+          <End Role="Quizzes" Type="Self.Quizzes" Multiplicity="1" />
+          <End Role="QuizAttempts" Type="Self.QuizAttempts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Quizzes">
+              <PropertyRef Name="QuizId" />
+            </Principal>
+            <Dependent Role="QuizAttempts">
+              <PropertyRef Name="QuizId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuizAttempts_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="QuizAttempts" Type="Self.QuizAttempts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="QuizAttempts">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Quizzes_Topics">
+          <End Role="Topics" Type="Self.Topics" Multiplicity="0..1" />
+          <End Role="Quizzes" Type="Self.Quizzes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topics">
+              <PropertyRef Name="TopicId" />
+            </Principal>
+            <Dependent Role="Quizzes">
+              <PropertyRef Name="TopicId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserDailyActivity_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserDailyActivity" Type="Self.UserDailyActivity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserDailyActivity">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserLearningSettings_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserLearningSettings" Type="Self.UserLearningSettings" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserLearningSettings">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserVocabularyProgress_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserVocabularyProgress" Type="Self.UserVocabularyProgress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserVocabularyProgress">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserVocabularyProgress_Vocabulary">
+          <End Role="Vocabulary" Type="Self.Vocabulary" Multiplicity="1" />
+          <End Role="UserVocabularyProgress" Type="Self.UserVocabularyProgress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vocabulary">
+              <PropertyRef Name="VocabularyId" />
+            </Principal>
+            <Dependent Role="UserVocabularyProgress">
+              <PropertyRef Name="VocabularyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Vocabulary_Topics">
+          <End Role="Topics" Type="Self.Topics" Multiplicity="1" />
+          <End Role="Vocabulary" Type="Self.Vocabulary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topics">
+              <PropertyRef Name="TopicId" />
+            </Principal>
+            <Dependent Role="Vocabulary">
+              <PropertyRef Name="TopicId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="VocabMasterDBModelStoreContainer">
+          <EntitySet Name="ExternalLogins" EntityType="Self.ExternalLogins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="QuestionOptions" EntityType="Self.QuestionOptions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Questions" EntityType="Self.Questions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="QuizAttemptAnswers" EntityType="Self.QuizAttemptAnswers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="QuizAttempts" EntityType="Self.QuizAttempts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Quizzes" EntityType="Self.Quizzes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Topics" EntityType="Self.Topics" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserDailyActivity" EntityType="Self.UserDailyActivity" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserLearningSettings" EntityType="Self.UserLearningSettings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserVocabularyProgress" EntityType="Self.UserVocabularyProgress" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Vocabulary" EntityType="Self.Vocabulary" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ExternalLogins_Users" Association="Self.FK_ExternalLogins_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="ExternalLogins" EntitySet="ExternalLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuestionOptions_Questions" Association="Self.FK_QuestionOptions_Questions">
+            <End Role="Questions" EntitySet="Questions" />
+            <End Role="QuestionOptions" EntitySet="QuestionOptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Questions_Quizzes" Association="Self.FK_Questions_Quizzes">
+            <End Role="Quizzes" EntitySet="Quizzes" />
+            <End Role="Questions" EntitySet="Questions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuizAttemptAnswers_Attempts" Association="Self.FK_QuizAttemptAnswers_Attempts">
+            <End Role="QuizAttempts" EntitySet="QuizAttempts" />
+            <End Role="QuizAttemptAnswers" EntitySet="QuizAttemptAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuizAttemptAnswers_Options" Association="Self.FK_QuizAttemptAnswers_Options">
+            <End Role="QuestionOptions" EntitySet="QuestionOptions" />
+            <End Role="QuizAttemptAnswers" EntitySet="QuizAttemptAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuizAttemptAnswers_Questions" Association="Self.FK_QuizAttemptAnswers_Questions">
+            <End Role="Questions" EntitySet="Questions" />
+            <End Role="QuizAttemptAnswers" EntitySet="QuizAttemptAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuizAttempts_Quizzes" Association="Self.FK_QuizAttempts_Quizzes">
+            <End Role="Quizzes" EntitySet="Quizzes" />
+            <End Role="QuizAttempts" EntitySet="QuizAttempts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuizAttempts_Users" Association="Self.FK_QuizAttempts_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="QuizAttempts" EntitySet="QuizAttempts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Quizzes_Topics" Association="Self.FK_Quizzes_Topics">
+            <End Role="Topics" EntitySet="Topics" />
+            <End Role="Quizzes" EntitySet="Quizzes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserDailyActivity_Users" Association="Self.FK_UserDailyActivity_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserDailyActivity" EntitySet="UserDailyActivity" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserLearningSettings_Users" Association="Self.FK_UserLearningSettings_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserLearningSettings" EntitySet="UserLearningSettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserVocabularyProgress_Users" Association="Self.FK_UserVocabularyProgress_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserVocabularyProgress" EntitySet="UserVocabularyProgress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserVocabularyProgress_Vocabulary" Association="Self.FK_UserVocabularyProgress_Vocabulary">
+            <End Role="Vocabulary" EntitySet="Vocabulary" />
+            <End Role="UserVocabularyProgress" EntitySet="UserVocabularyProgress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Vocabulary_Topics" Association="Self.FK_Vocabulary_Topics">
+            <End Role="Topics" EntitySet="Topics" />
+            <End Role="Vocabulary" EntitySet="Vocabulary" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="VocabMasterDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ExternalLogin">
+          <Key>
+            <PropertyRef Name="ExternalLoginId" />
+          </Key>
+          <Property Name="ExternalLoginId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Provider" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProviderUserId" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_ExternalLogins_Users" FromRole="ExternalLogins" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="QuestionOption">
+          <Key>
+            <PropertyRef Name="OptionId" />
+          </Key>
+          <Property Name="OptionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuestionId" Type="Int32" Nullable="false" />
+          <Property Name="OptionLabel" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="OptionText" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsCorrect" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Question" Relationship="Self.FK_QuestionOptions_Questions" FromRole="QuestionOptions" ToRole="Questions" />
+          <NavigationProperty Name="QuizAttemptAnswers" Relationship="Self.FK_QuizAttemptAnswers_Options" FromRole="QuestionOptions" ToRole="QuizAttemptAnswers" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="QuestionId" />
+          </Key>
+          <Property Name="QuestionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuizId" Type="Int32" Nullable="false" />
+          <Property Name="QuestionText" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Explanation" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="SortOrder" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="QuestionOptions" Relationship="Self.FK_QuestionOptions_Questions" FromRole="Questions" ToRole="QuestionOptions" />
+          <NavigationProperty Name="Quizze" Relationship="Self.FK_Questions_Quizzes" FromRole="Questions" ToRole="Quizzes" />
+          <NavigationProperty Name="QuizAttemptAnswers" Relationship="Self.FK_QuizAttemptAnswers_Questions" FromRole="Questions" ToRole="QuizAttemptAnswers" />
+        </EntityType>
+        <EntityType Name="QuizAttemptAnswer">
+          <Key>
+            <PropertyRef Name="AttemptAnswerId" />
+          </Key>
+          <Property Name="AttemptAnswerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AttemptId" Type="Int32" Nullable="false" />
+          <Property Name="QuestionId" Type="Int32" Nullable="false" />
+          <Property Name="SelectedOptionId" Type="Int32" />
+          <Property Name="IsCorrect" Type="Boolean" Nullable="false" />
+          <Property Name="AnsweredAt" Type="DateTime" Precision="7" />
+          <NavigationProperty Name="QuestionOption" Relationship="Self.FK_QuizAttemptAnswers_Options" FromRole="QuizAttemptAnswers" ToRole="QuestionOptions" />
+          <NavigationProperty Name="Question" Relationship="Self.FK_QuizAttemptAnswers_Questions" FromRole="QuizAttemptAnswers" ToRole="Questions" />
+          <NavigationProperty Name="QuizAttempt" Relationship="Self.FK_QuizAttemptAnswers_Attempts" FromRole="QuizAttemptAnswers" ToRole="QuizAttempts" />
+        </EntityType>
+        <EntityType Name="QuizAttempt">
+          <Key>
+            <PropertyRef Name="AttemptId" />
+          </Key>
+          <Property Name="AttemptId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="QuizId" Type="Int32" Nullable="false" />
+          <Property Name="StartedAt" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="CompletedAt" Type="DateTime" Precision="7" />
+          <Property Name="CorrectCount" Type="Int32" Nullable="false" />
+          <Property Name="TotalQuestions" Type="Int32" Nullable="false" />
+          <Property Name="Score" Type="Decimal" Precision="5" Scale="2" Nullable="false" />
+          <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="QuizAttemptAnswers" Relationship="Self.FK_QuizAttemptAnswers_Attempts" FromRole="QuizAttempts" ToRole="QuizAttemptAnswers" />
+          <NavigationProperty Name="Quizze" Relationship="Self.FK_QuizAttempts_Quizzes" FromRole="QuizAttempts" ToRole="Quizzes" />
+          <NavigationProperty Name="User" Relationship="Self.FK_QuizAttempts_Users" FromRole="QuizAttempts" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Quizze">
+          <Key>
+            <PropertyRef Name="QuizId" />
+          </Key>
+          <Property Name="QuizId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TopicId" Type="Int32" />
+          <Property Name="QuizTitle" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="QuestionCount" Type="Int32" Nullable="false" />
+          <Property Name="TimeLimitSeconds" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Questions" Relationship="Self.FK_Questions_Quizzes" FromRole="Quizzes" ToRole="Questions" />
+          <NavigationProperty Name="QuizAttempts" Relationship="Self.FK_QuizAttempts_Quizzes" FromRole="Quizzes" ToRole="QuizAttempts" />
+          <NavigationProperty Name="Topic" Relationship="Self.FK_Quizzes_Topics" FromRole="Quizzes" ToRole="Topics" />
+        </EntityType>
+        <EntityType Name="Topic">
+          <Key>
+            <PropertyRef Name="TopicId" />
+          </Key>
+          <Property Name="TopicId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TopicName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IconUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="SortOrder" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Quizzes" Relationship="Self.FK_Quizzes_Topics" FromRole="Topics" ToRole="Quizzes" />
+          <NavigationProperty Name="Vocabularies" Relationship="Self.FK_Vocabulary_Topics" FromRole="Topics" ToRole="Vocabulary" />
+        </EntityType>
+        <EntityType Name="UserDailyActivity">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="ActivityDate" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="ActivityDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="WordsLearned" Type="Int32" Nullable="false" />
+          <Property Name="QuizCount" Type="Int32" Nullable="false" />
+          <Property Name="CorrectAnswers" Type="Int32" Nullable="false" />
+          <Property Name="StudyMinutes" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserDailyActivity_Users" FromRole="UserDailyActivity" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="UserLearningSetting">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="DailyWordGoal" Type="Int32" Nullable="false" />
+          <Property Name="ReminderEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="ReminderTime" Type="Time" Precision="7" />
+          <Property Name="SoundEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="UpdatedAt" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserLearningSettings_Users" FromRole="UserLearningSettings" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DisplayName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AvatarUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Role" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="LastLoginAt" Type="DateTime" Precision="7" />
+          <NavigationProperty Name="ExternalLogins" Relationship="Self.FK_ExternalLogins_Users" FromRole="Users" ToRole="ExternalLogins" />
+          <NavigationProperty Name="QuizAttempts" Relationship="Self.FK_QuizAttempts_Users" FromRole="Users" ToRole="QuizAttempts" />
+          <NavigationProperty Name="UserDailyActivities" Relationship="Self.FK_UserDailyActivity_Users" FromRole="Users" ToRole="UserDailyActivity" />
+          <NavigationProperty Name="UserLearningSetting" Relationship="Self.FK_UserLearningSettings_Users" FromRole="Users" ToRole="UserLearningSettings" />
+          <NavigationProperty Name="UserVocabularyProgresses" Relationship="Self.FK_UserVocabularyProgress_Users" FromRole="Users" ToRole="UserVocabularyProgress" />
+        </EntityType>
+        <EntityType Name="UserVocabularyProgress">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="VocabularyId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="VocabularyId" Type="Int32" Nullable="false" />
+          <Property Name="IsLearned" Type="Boolean" Nullable="false" />
+          <Property Name="IsBookmarked" Type="Boolean" Nullable="false" />
+          <Property Name="TimesReviewed" Type="Int32" Nullable="false" />
+          <Property Name="LastReviewedAt" Type="DateTime" Precision="7" />
+          <Property Name="LearnedAt" Type="DateTime" Precision="7" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserVocabularyProgress_Users" FromRole="UserVocabularyProgress" ToRole="Users" />
+          <NavigationProperty Name="Vocabulary" Relationship="Self.FK_UserVocabularyProgress_Vocabulary" FromRole="UserVocabularyProgress" ToRole="Vocabulary" />
+        </EntityType>
+        <EntityType Name="Vocabulary">
+          <Key>
+            <PropertyRef Name="VocabularyId" />
+          </Key>
+          <Property Name="VocabularyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TopicId" Type="Int32" Nullable="false" />
+          <Property Name="EnglishWord" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PartOfSpeech" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="VietnameseMeaning" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Pronunciation" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ExampleSentence" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="ExampleMeaning" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="ImageUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="AudioUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Topic" Relationship="Self.FK_Vocabulary_Topics" FromRole="Vocabulary" ToRole="Topics" />
+          <NavigationProperty Name="UserVocabularyProgresses" Relationship="Self.FK_UserVocabularyProgress_Vocabulary" FromRole="Vocabulary" ToRole="UserVocabularyProgress" />
+        </EntityType>
+        <Association Name="FK_ExternalLogins_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="ExternalLogins" Type="Self.ExternalLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ExternalLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuestionOptions_Questions">
+          <End Role="Questions" Type="Self.Question" Multiplicity="1" />
+          <End Role="QuestionOptions" Type="Self.QuestionOption" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Questions">
+              <PropertyRef Name="QuestionId" />
+            </Principal>
+            <Dependent Role="QuestionOptions">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuizAttemptAnswers_Options">
+          <End Role="QuestionOptions" Type="Self.QuestionOption" Multiplicity="0..1" />
+          <End Role="QuizAttemptAnswers" Type="Self.QuizAttemptAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="QuestionOptions">
+              <PropertyRef Name="OptionId" />
+            </Principal>
+            <Dependent Role="QuizAttemptAnswers">
+              <PropertyRef Name="SelectedOptionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Questions_Quizzes">
+          <End Role="Quizzes" Type="Self.Quizze" Multiplicity="1" />
+          <End Role="Questions" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Quizzes">
+              <PropertyRef Name="QuizId" />
+            </Principal>
+            <Dependent Role="Questions">
+              <PropertyRef Name="QuizId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuizAttemptAnswers_Questions">
+          <End Role="Questions" Type="Self.Question" Multiplicity="1" />
+          <End Role="QuizAttemptAnswers" Type="Self.QuizAttemptAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Questions">
+              <PropertyRef Name="QuestionId" />
+            </Principal>
+            <Dependent Role="QuizAttemptAnswers">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuizAttemptAnswers_Attempts">
+          <End Role="QuizAttempts" Type="Self.QuizAttempt" Multiplicity="1" />
+          <End Role="QuizAttemptAnswers" Type="Self.QuizAttemptAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="QuizAttempts">
+              <PropertyRef Name="AttemptId" />
+            </Principal>
+            <Dependent Role="QuizAttemptAnswers">
+              <PropertyRef Name="AttemptId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuizAttempts_Quizzes">
+          <End Role="Quizzes" Type="Self.Quizze" Multiplicity="1" />
+          <End Role="QuizAttempts" Type="Self.QuizAttempt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Quizzes">
+              <PropertyRef Name="QuizId" />
+            </Principal>
+            <Dependent Role="QuizAttempts">
+              <PropertyRef Name="QuizId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QuizAttempts_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="QuizAttempts" Type="Self.QuizAttempt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="QuizAttempts">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Quizzes_Topics">
+          <End Role="Topics" Type="Self.Topic" Multiplicity="0..1" />
+          <End Role="Quizzes" Type="Self.Quizze" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topics">
+              <PropertyRef Name="TopicId" />
+            </Principal>
+            <Dependent Role="Quizzes">
+              <PropertyRef Name="TopicId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Vocabulary_Topics">
+          <End Role="Topics" Type="Self.Topic" Multiplicity="1" />
+          <End Role="Vocabulary" Type="Self.Vocabulary" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topics">
+              <PropertyRef Name="TopicId" />
+            </Principal>
+            <Dependent Role="Vocabulary">
+              <PropertyRef Name="TopicId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserDailyActivity_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="UserDailyActivity" Type="Self.UserDailyActivity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserDailyActivity">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserLearningSettings_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="UserLearningSettings" Type="Self.UserLearningSetting" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserLearningSettings">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserVocabularyProgress_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="UserVocabularyProgress" Type="Self.UserVocabularyProgress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserVocabularyProgress">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserVocabularyProgress_Vocabulary">
+          <End Role="Vocabulary" Type="Self.Vocabulary" Multiplicity="1" />
+          <End Role="UserVocabularyProgress" Type="Self.UserVocabularyProgress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vocabulary">
+              <PropertyRef Name="VocabularyId" />
+            </Principal>
+            <Dependent Role="UserVocabularyProgress">
+              <PropertyRef Name="VocabularyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="VocabMasterDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ExternalLogins" EntityType="Self.ExternalLogin" />
+          <EntitySet Name="QuestionOptions" EntityType="Self.QuestionOption" />
+          <EntitySet Name="Questions" EntityType="Self.Question" />
+          <EntitySet Name="QuizAttemptAnswers" EntityType="Self.QuizAttemptAnswer" />
+          <EntitySet Name="QuizAttempts" EntityType="Self.QuizAttempt" />
+          <EntitySet Name="Quizzes" EntityType="Self.Quizze" />
+          <EntitySet Name="Topics" EntityType="Self.Topic" />
+          <EntitySet Name="UserDailyActivities" EntityType="Self.UserDailyActivity" />
+          <EntitySet Name="UserLearningSettings" EntityType="Self.UserLearningSetting" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="UserVocabularyProgresses" EntityType="Self.UserVocabularyProgress" />
+          <EntitySet Name="Vocabularies" EntityType="Self.Vocabulary" />
+          <AssociationSet Name="FK_ExternalLogins_Users" Association="Self.FK_ExternalLogins_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="ExternalLogins" EntitySet="ExternalLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuestionOptions_Questions" Association="Self.FK_QuestionOptions_Questions">
+            <End Role="Questions" EntitySet="Questions" />
+            <End Role="QuestionOptions" EntitySet="QuestionOptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuizAttemptAnswers_Options" Association="Self.FK_QuizAttemptAnswers_Options">
+            <End Role="QuestionOptions" EntitySet="QuestionOptions" />
+            <End Role="QuizAttemptAnswers" EntitySet="QuizAttemptAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Questions_Quizzes" Association="Self.FK_Questions_Quizzes">
+            <End Role="Quizzes" EntitySet="Quizzes" />
+            <End Role="Questions" EntitySet="Questions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuizAttemptAnswers_Questions" Association="Self.FK_QuizAttemptAnswers_Questions">
+            <End Role="Questions" EntitySet="Questions" />
+            <End Role="QuizAttemptAnswers" EntitySet="QuizAttemptAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuizAttemptAnswers_Attempts" Association="Self.FK_QuizAttemptAnswers_Attempts">
+            <End Role="QuizAttempts" EntitySet="QuizAttempts" />
+            <End Role="QuizAttemptAnswers" EntitySet="QuizAttemptAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuizAttempts_Quizzes" Association="Self.FK_QuizAttempts_Quizzes">
+            <End Role="Quizzes" EntitySet="Quizzes" />
+            <End Role="QuizAttempts" EntitySet="QuizAttempts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QuizAttempts_Users" Association="Self.FK_QuizAttempts_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="QuizAttempts" EntitySet="QuizAttempts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Quizzes_Topics" Association="Self.FK_Quizzes_Topics">
+            <End Role="Topics" EntitySet="Topics" />
+            <End Role="Quizzes" EntitySet="Quizzes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Vocabulary_Topics" Association="Self.FK_Vocabulary_Topics">
+            <End Role="Topics" EntitySet="Topics" />
+            <End Role="Vocabulary" EntitySet="Vocabularies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserDailyActivity_Users" Association="Self.FK_UserDailyActivity_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserDailyActivity" EntitySet="UserDailyActivities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserLearningSettings_Users" Association="Self.FK_UserLearningSettings_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserLearningSettings" EntitySet="UserLearningSettings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserVocabularyProgress_Users" Association="Self.FK_UserVocabularyProgress_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserVocabularyProgress" EntitySet="UserVocabularyProgresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserVocabularyProgress_Vocabulary" Association="Self.FK_UserVocabularyProgress_Vocabulary">
+            <End Role="Vocabulary" EntitySet="Vocabularies" />
+            <End Role="UserVocabularyProgress" EntitySet="UserVocabularyProgresses" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="VocabMasterDBModelStoreContainer" CdmEntityContainer="VocabMasterDBEntities">
+          <EntitySetMapping Name="ExternalLogins">
+            <EntityTypeMapping TypeName="VocabMasterDBModel.ExternalLogin">
+              <MappingFragment StoreEntitySet="ExternalLogins">
+                <ScalarProperty Name="ExternalLoginId" ColumnName="ExternalLoginId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Provider" ColumnName="Provider" />
+                <ScalarProperty Name="ProviderUserId" ColumnName="ProviderUserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="QuestionOptions">
+            <EntityTypeMapping TypeName="VocabMasterDBModel.QuestionOption">
+              <MappingFragment StoreEntitySet="QuestionOptions">
+                <ScalarProperty Name="OptionId" ColumnName="OptionId" />
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="OptionLabel" ColumnName="OptionLabel" />
+                <ScalarProperty Name="OptionText" ColumnName="OptionText" />
+                <ScalarProperty Name="IsCorrect" ColumnName="IsCorrect" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Questions">
+            <EntityTypeMapping TypeName="VocabMasterDBModel.Question">
+              <MappingFragment StoreEntitySet="Questions">
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="QuizId" ColumnName="QuizId" />
+                <ScalarProperty Name="QuestionText" ColumnName="QuestionText" />
+                <ScalarProperty Name="Explanation" ColumnName="Explanation" />
+                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="QuizAttemptAnswers">
+            <EntityTypeMapping TypeName="VocabMasterDBModel.QuizAttemptAnswer">
+              <MappingFragment StoreEntitySet="QuizAttemptAnswers">
+                <ScalarProperty Name="AttemptAnswerId" ColumnName="AttemptAnswerId" />
+                <ScalarProperty Name="AttemptId" ColumnName="AttemptId" />
+                <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+                <ScalarProperty Name="SelectedOptionId" ColumnName="SelectedOptionId" />
+                <ScalarProperty Name="IsCorrect" ColumnName="IsCorrect" />
+                <ScalarProperty Name="AnsweredAt" ColumnName="AnsweredAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="QuizAttempts">
+            <EntityTypeMapping TypeName="VocabMasterDBModel.QuizAttempt">
+              <MappingFragment StoreEntitySet="QuizAttempts">
+                <ScalarProperty Name="AttemptId" ColumnName="AttemptId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="QuizId" ColumnName="QuizId" />
+                <ScalarProperty Name="StartedAt" ColumnName="StartedAt" />
+                <ScalarProperty Name="CompletedAt" ColumnName="CompletedAt" />
+                <ScalarProperty Name="CorrectCount" ColumnName="CorrectCount" />
+                <ScalarProperty Name="TotalQuestions" ColumnName="TotalQuestions" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Quizzes">
+            <EntityTypeMapping TypeName="VocabMasterDBModel.Quizze">
+              <MappingFragment StoreEntitySet="Quizzes">
+                <ScalarProperty Name="QuizId" ColumnName="QuizId" />
+                <ScalarProperty Name="TopicId" ColumnName="TopicId" />
+                <ScalarProperty Name="QuizTitle" ColumnName="QuizTitle" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="QuestionCount" ColumnName="QuestionCount" />
+                <ScalarProperty Name="TimeLimitSeconds" ColumnName="TimeLimitSeconds" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Topics">
+            <EntityTypeMapping TypeName="VocabMasterDBModel.Topic">
+              <MappingFragment StoreEntitySet="Topics">
+                <ScalarProperty Name="TopicId" ColumnName="TopicId" />
+                <ScalarProperty Name="TopicName" ColumnName="TopicName" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="IconUrl" ColumnName="IconUrl" />
+                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserDailyActivities">
+            <EntityTypeMapping TypeName="VocabMasterDBModel.UserDailyActivity">
+              <MappingFragment StoreEntitySet="UserDailyActivity">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ActivityDate" ColumnName="ActivityDate" />
+                <ScalarProperty Name="WordsLearned" ColumnName="WordsLearned" />
+                <ScalarProperty Name="QuizCount" ColumnName="QuizCount" />
+                <ScalarProperty Name="CorrectAnswers" ColumnName="CorrectAnswers" />
+                <ScalarProperty Name="StudyMinutes" ColumnName="StudyMinutes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserLearningSettings">
+            <EntityTypeMapping TypeName="VocabMasterDBModel.UserLearningSetting">
+              <MappingFragment StoreEntitySet="UserLearningSettings">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="DailyWordGoal" ColumnName="DailyWordGoal" />
+                <ScalarProperty Name="ReminderEnabled" ColumnName="ReminderEnabled" />
+                <ScalarProperty Name="ReminderTime" ColumnName="ReminderTime" />
+                <ScalarProperty Name="SoundEnabled" ColumnName="SoundEnabled" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="VocabMasterDBModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="AvatarUrl" ColumnName="AvatarUrl" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="LastLoginAt" ColumnName="LastLoginAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserVocabularyProgresses">
+            <EntityTypeMapping TypeName="VocabMasterDBModel.UserVocabularyProgress">
+              <MappingFragment StoreEntitySet="UserVocabularyProgress">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="VocabularyId" ColumnName="VocabularyId" />
+                <ScalarProperty Name="IsLearned" ColumnName="IsLearned" />
+                <ScalarProperty Name="IsBookmarked" ColumnName="IsBookmarked" />
+                <ScalarProperty Name="TimesReviewed" ColumnName="TimesReviewed" />
+                <ScalarProperty Name="LastReviewedAt" ColumnName="LastReviewedAt" />
+                <ScalarProperty Name="LearnedAt" ColumnName="LearnedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vocabularies">
+            <EntityTypeMapping TypeName="VocabMasterDBModel.Vocabulary">
+              <MappingFragment StoreEntitySet="Vocabulary">
+                <ScalarProperty Name="VocabularyId" ColumnName="VocabularyId" />
+                <ScalarProperty Name="TopicId" ColumnName="TopicId" />
+                <ScalarProperty Name="EnglishWord" ColumnName="EnglishWord" />
+                <ScalarProperty Name="PartOfSpeech" ColumnName="PartOfSpeech" />
+                <ScalarProperty Name="VietnameseMeaning" ColumnName="VietnameseMeaning" />
+                <ScalarProperty Name="Pronunciation" ColumnName="Pronunciation" />
+                <ScalarProperty Name="ExampleSentence" ColumnName="ExampleSentence" />
+                <ScalarProperty Name="ExampleMeaning" ColumnName="ExampleMeaning" />
+                <ScalarProperty Name="ImageUrl" ColumnName="ImageUrl" />
+                <ScalarProperty Name="AudioUrl" ColumnName="AudioUrl" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
