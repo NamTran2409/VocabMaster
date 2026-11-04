@@ -1,0 +1,238 @@
+﻿
+@{
+    ViewBag.Title = "Admin Dashboard";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Admin Dashboard - VocabMaster</title>
+
+    <!-- Kết nối CSS dùng chung -->
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/site.css")" />
+</head>
+
+<body>
+
+    <div class="admin-container">
+
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-logo">
+                <h2>VocabMaster</h2>
+                <p>English Vocabulary Learning</p>
+            </div>
+
+            <div class="admin-workspace">
+                <span>ADMIN WORKSPACE</span>
+            </div>
+
+            <!-- MENU -->
+            <nav class="admin-navigation">
+
+                <a href="@Url.Action("Index", "Admin")"
+                   class="active">
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="@Url.Action("Index", "AdminTopics")">
+                    <span>Topics Management</span>
+                </a>
+
+                <a href="@Url.Action("Index", "AdminVocabulary")">
+                    <span>Vocabulary Management</span>
+                </a>
+
+                <a href="@Url.Action("Index", "AdminQuestions")">
+                    <span>Quiz Management</span>
+                </a>
+
+                <a href="@Url.Action("Index", "AdminUsers")">
+                    <span>Users</span>
+                </a>
+
+            </nav>
+
+            <!-- SIDEBAR BOTTOM -->
+            <div class="admin-sidebar-bottom">
+                <a href="@Url.Action("Index", "Home")">
+                    Trở về học tập
+                </a>
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <main class="admin-main">
+
+            <!-- HEADER -->
+            <header class="admin-header">
+
+                <div>
+                    <h1>Dashboard</h1>
+
+                    <p>
+                        Chào mừng bạn đến với không gian quản trị VocabMaster.
+                    </p>
+                </div>
+
+                <div class="admin-role">
+                    Administrator
+                </div>
+
+            </header>
+
+
+            <!-- WELCOME -->
+            <section class="admin-welcome">
+
+                <h2>Không gian quản trị</h2>
+
+                <p>
+                    Quản lý chủ đề, từ vựng, câu hỏi và tài khoản học viên
+                    trong hệ thống VocabMaster.
+                </p>
+
+            </section>
+
+
+            <!-- STATISTICS -->
+            <section class="admin-statistics">
+
+                <!-- TOPICS -->
+                <div class="admin-stat-card">
+
+                    <h3>Tổng chủ đề</h3>
+
+                    <strong>
+                        @(ViewBag.TopicCount ?? 0)
+                    </strong>
+
+                    <p>Topics</p>
+
+                </div>
+
+
+                <!-- VOCABULARY -->
+                <div class="admin-stat-card">
+
+                    <h3>Tổng từ vựng</h3>
+
+                    <strong>
+                        @(ViewBag.VocabularyCount ?? 0)
+                    </strong>
+
+                    <p>Vocabulary</p>
+
+                </div>
+
+
+                <!-- QUESTIONS -->
+                <div class="admin-stat-card">
+
+                    <h3>Tổng câu hỏi</h3>
+
+                    <strong>
+                        @(ViewBag.QuestionCount ?? 0)
+                    </strong>
+
+                    <p>Quiz Questions</p>
+
+                </div>
+
+
+                <!-- USERS -->
+                <div class="admin-stat-card">
+
+                    <h3>Tổng học viên</h3>
+
+                    <strong>
+                        @(ViewBag.UserCount ?? 0)
+                    </strong>
+
+                    <p>Students</p>
+
+                </div>
+
+            </section>
+
+
+            <!-- MANAGEMENT -->
+            <section class="admin-content">
+
+                <h2>Chức năng quản lý</h2>
+
+                <div class="admin-management-grid">
+
+                    <!-- TOPIC MANAGEMENT -->
+                    <a href="@Url.Action("Index", "AdminTopics")"
+                       class="admin-management-card">
+
+                        <h3>Quản lý chủ đề</h3>
+
+                        <p>
+                            Thêm, chỉnh sửa, tìm kiếm và xóa
+                            các chủ đề từ vựng.
+                        </p>
+
+                    </a>
+
+
+                    <!-- VOCABULARY MANAGEMENT -->
+                    <a href="@Url.Action("Index", "AdminVocabulary")"
+                       class="admin-management-card">
+
+                        <h3>Quản lý từ vựng</h3>
+
+                        <p>
+                            Thêm mới, chỉnh sửa và quản lý
+                            danh sách từ vựng.
+                        </p>
+
+                    </a>
+
+
+                    <!-- QUIZ MANAGEMENT -->
+                    <a href="@Url.Action("Index", "AdminQuestions")"
+                       class="admin-management-card">
+
+                        <h3>Quản lý câu hỏi</h3>
+
+                        <p>
+                            Quản lý câu hỏi và các đáp án
+                            trong bài kiểm tra.
+                        </p>
+
+                    </a>
+
+
+                    <!-- USER MANAGEMENT -->
+                    <a href="@Url.Action("Index", "AdminUsers")"
+                       class="admin-management-card">
+
+                        <h3>Quản lý học viên</h3>
+
+                        <p>
+                            Xem thông tin và quản lý
+                            tài khoản học viên.
+                        </p>
+
+                    </a>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
