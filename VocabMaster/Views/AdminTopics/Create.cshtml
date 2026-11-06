@@ -1,0 +1,183 @@
+﻿
+@model VocabMaster.Models.Topic
+
+@{
+    ViewBag.Title = "Thêm chủ đề mới";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thêm chủ đề - VocabMaster Admin</title>
+
+    <link rel="stylesheet"
+          <link rel="stylesheet" href="@Url.Content("~/Content/site.css")" /> />
+</head>
+<body>
+
+    <div class="admin-container">
+
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <h2>VocabMaster</h2>
+                <p>ADMIN WORKSPACE</p>
+            </div>
+
+            <nav class="admin-navigation">
+                <a href="@Url.Action("Index", "Admin")">
+                    <span>▦</span> Dashboard
+                </a>
+
+                <a class="active"
+                   href="@Url.Action("Index", "AdminTopics")">
+                    <span>📚</span> Quản lý chủ đề
+                </a>
+
+                <a href="@Url.Action("Index", "AdminVocabulary")">
+                    <span>📝</span> Quản lý từ vựng
+                </a>
+
+                <a href="@Url.Action("Index", "AdminQuestions")">
+                    <span>❓</span> Quản lý câu hỏi
+                </a>
+
+                <a href="@Url.Action("Index", "AdminUsers")">
+                    <span>👥</span> Quản lý người dùng
+                </a>
+            </nav>
+
+            <div class="admin-sidebar-bottom">
+                <a href="@Url.Action("Index", "Home")">
+                    ← Về trang chủ
+                </a>
+                <p>Quản trị hệ thống</p>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+
+            <header class="admin-header">
+                <div>
+                    <h2>Thêm chủ đề mới</h2>
+                    <p>Tạo chủ đề mới cho hệ thống học từ vựng</p>
+                </div>
+
+                <div class="admin-role">
+                    <span>👤</span>
+                    <div>
+                        <strong>Quản trị viên</strong>
+                        <small>ADMIN</small>
+                    </div>
+                </div>
+            </header>
+
+            <section class="admin-welcome">
+                <div>
+                    <h1>Thêm chủ đề mới 📚</h1>
+                    <p>
+                        Điền thông tin bên dưới để tạo một chủ đề
+                        học từ vựng mới.
+                    </p>
+                </div>
+            </section>
+
+            <section class="topic-form-card">
+
+                @using (Html.BeginForm(
+                    "Create",
+                    "AdminTopics",
+                    FormMethod.Post,
+                    new { @class = "topic-form" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(
+                        false,
+                        "",
+                        new { @class = "topic-validation" })
+
+                    <div class="topic-form-group">
+                        <label for="TopicName">Tên chủ đề <span>*</span></label>
+                        @Html.TextBoxFor(m => m.TopicName,
+                            new
+                                 {
+                                @class = "topic-form-control",
+                                placeholder = "Ví dụ: Food, Travel, Education...",
+                                maxlength = "255"
+                            })
+                        @Html.ValidationMessageFor(m => m.TopicName)
+                    </div>
+
+                    <div class="topic-form-group">
+                        <label for="Description">Mô tả</label>
+                        @Html.TextAreaFor(m => m.Description,
+                            new
+                                 {
+                                @class = "topic-form-control",
+                                rows = "4",
+                                placeholder = "Nhập mô tả cho chủ đề..."
+                            })
+                    </div>
+
+                    <div class="topic-form-row">
+                        <div class="topic-form-group">
+                            <label for="IconUrl">Đường dẫn biểu tượng</label>
+                            @Html.TextBoxFor(m => m.IconUrl,
+                                new
+                                     {
+                                    @class = "topic-form-control",
+                                    placeholder = "https://..."
+                                })
+                        </div>
+
+                        <div class="topic-form-group">
+                            <label for="SortOrder">Thứ tự hiển thị</label>
+                            @Html.TextBoxFor(m => m.SortOrder,
+                                new
+                                     {
+                                    @class = "topic-form-control",
+                                    type = "number",
+                                    min = "0"
+                                })
+                        </div>
+                    </div>
+
+                    <div class="topic-form-group">
+                        <label for="Status">Trạng thái</label>
+                        @Html.DropDownListFor(
+                            m => m.Status,
+                            new SelectList(
+                                new[] {
+                                    new { Value = "Active", Text = "Hoạt động" },
+                                    new { Value = "Inactive", Text = "Ngừng hoạt động" }
+                                },
+                                "Value",
+                                "Text",
+                                Model.Status
+                            ),
+                            new { @class = "topic-form-control" }
+                        )
+                    </div>
+
+                    <div class="topic-form-actions">
+                        <a href="@Url.Action("Index", "AdminTopics")"
+                           class="topic-cancel-button">
+                            Hủy
+                        </a>
+
+                        <button type="submit" class="topic-save-button">
+                            + Lưu chủ đề
+                        </button>
+                    </div>
+                }
+
+            </section>
+
+        </main>
+    </div>
+
+</body>
+</html>

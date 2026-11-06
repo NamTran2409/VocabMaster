@@ -463,3 +463,106 @@ textarea {
 }
 
 
+/* TOPIC CREATE FORM */
+.topic-form-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(30, 43, 70, 0.05);
+    margin-top: 25px;
+    max-width: 900px;
+}
+
+.topic-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.topic-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+    .topic-form-group label {
+        color: #1E2B46;
+        font-weight: 600;
+    }
+
+        .topic-form-group label span {
+            color: #e53935;
+        }
+
+.topic-form-control {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #dce3ef;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #1E2B46;
+    background: #fff;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+    .topic-form-control:focus {
+        outline: none;
+        border-color: #3164F4;
+        box-shadow: 0 0 0 3px rgba(49, 100, 244, 0.1);
+    }
+
+.topic-form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.topic-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.topic-save-button,
+.topic-cancel-button {
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    font-size: 14px;
+}
+
+.topic-save-button {
+    background: #3164F4;
+    color: #fff;
+}
+
+    .topic-save-button:hover {
+        background: #2454DC;
+    }
+
+.topic-cancel-button {
+    background: #eef2f8;
+    color: #1E2B46;
+}
+
+.topic-validation,
+.field-validation-error {
+    color: #e53935;
+    font-size: 13px;
+}
+
+@media (max-width: 768px) {
+    .topic-form-row {
+        flex-direction: column;
+    }
+
+    .topic-form-card {
+        padding: 20px;
+    }
+}
+
