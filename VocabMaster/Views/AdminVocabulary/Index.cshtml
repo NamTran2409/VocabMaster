@@ -1,0 +1,313 @@
+﻿@model IEnumerable<VocabMaster.Models.Vocabulary>
+
+@{
+    ViewBag.Title = "Vocabulary Management";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Vocabulary Management - VocabMaster</title>
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/site.css")" />
+</head>
+
+<body>
+
+    <div class="admin-container">
+
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-logo">
+                <h2>VocabMaster</h2>
+                <p>English Vocabulary Learning</p>
+            </div>
+
+            <div class="admin-workspace">
+                <span>ADMIN WORKSPACE</span>
+            </div>
+
+            <nav class="admin-navigation">
+
+                <a href="@Url.Action("Index", "Admin")">
+                    Dashboard
+                </a>
+
+                <a href="@Url.Action("Index", "AdminTopics")">
+                    Topics Management
+                </a>
+
+                <a href="@Url.Action("Index", "AdminVocabulary")"
+                   class="active">
+                    Vocabulary Management
+                </a>
+
+                <a href="@Url.Action("Index", "AdminQuestions")">
+                    Quiz Management
+                </a>
+
+                <a href="@Url.Action("Index", "AdminUsers")">
+                    Users
+                </a>
+
+            </nav>
+
+            <div class="admin-sidebar-bottom">
+                <a href="@Url.Action("Index", "Home")">
+                    Trở về học tập
+                </a>
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <main class="admin-main">
+
+            <!-- HEADER -->
+            <header class="admin-header">
+
+                <div>
+                    <h1>Vocabulary Management</h1>
+                    <p>Quản lý danh sách từ vựng trong hệ thống.</p>
+                </div>
+
+                <div class="admin-role">
+                    Administrator
+                </div>
+
+            </header>
+
+
+            <!-- WELCOME -->
+            <section class="admin-welcome">
+
+                <h2>Quản lý từ vựng</h2>
+
+                <p>
+                    Theo dõi, tìm kiếm và quản lý các từ vựng tiếng Anh
+                    trong hệ thống VocabMaster.
+                </p>
+
+            </section>
+
+
+            <!-- STATISTICS -->
+            <section class="admin-statistics">
+
+                <div class="admin-stat-card">
+                    <h3>Tổng số từ vựng</h3>
+                    <strong>@Model.Count()</strong>
+                    <p>Total Vocabulary</p>
+                </div>
+
+                <div class="admin-stat-card">
+                    <h3>Đang hoạt động</h3>
+                    <strong>
+                        @Model.Count(v => v.Status == "Published")
+                    </strong>
+                    <p>Published Vocabulary</p>
+                </div>
+
+                <div class="admin-stat-card">
+                    <h3>Đã ẩn</h3>
+                    <strong>
+                        @Model.Count(v => v.Status != "Published")
+                    </strong>
+                    <p>Inactive Vocabulary</p>
+                </div>
+
+                <div class="admin-stat-card">
+                    <h3>Số chủ đề</h3>
+                    <strong>
+                        @ViewBag.TopicCount
+                    </strong>
+                    <p>Total Topics</p>
+                </div>
+
+            </section>
+
+
+            <!-- VOCABULARY MANAGEMENT -->
+            <section class="admin-content">
+
+                <div class="topic-toolbar">
+
+                    <div>
+                        <h2>Danh sách từ vựng</h2>
+                        <p>Quản lý thông tin các từ vựng hiện có.</p>
+                    </div>
+
+                    <a href="@Url.Action("Create", "AdminVocabulary")"
+                       class="topic-add-button">
+                        + Thêm từ vựng
+                    </a>
+
+                </div>
+
+
+                <!-- SEARCH AND FILTER -->
+                @using (Html.BeginForm("Index", "AdminVocabulary", FormMethod.Get))
+                {
+                    <div class="topic-search">
+
+                        <input type="text"
+                               name="searchString"
+                               value="@ViewBag.SearchString"
+                               placeholder="Nhập từ tiếng Anh hoặc nghĩa tiếng Việt..." />
+
+                        <select name="topicId">
+                            <option value="">Tất cả chủ đề</option>
+
+                            @if (ViewBag.Topics != null)
+                            {
+                                foreach (var topic in ViewBag.Topics)
+                                {
+                                    <option value="@topic.TopicId"
+                                            @(ViewBag.SelectedTopicId != null && (int)ViewBag.SelectedTopicId == topic.TopicId ? "selected" : "")>
+                                        @topic.TopicName
+                                    </option>
+                                }
+                            }
+                        </select>
+
+                        <button type="submit">
+                            Tìm kiếm
+                        </button>
+
+                        <a href="@Url.Action("Index", "AdminVocabulary")">
+                            Làm mới
+                        </a>
+
+                    </div>
+                }
+
+
+                <!-- TABLE -->
+                <div class="topic-table-wrapper">
+
+                    <table class="topic-table">
+
+                        <thead>
+                            <tr>
+                                <th>Mã</th>
+                                <th>Từ tiếng Anh</th>
+                                <th>Loại từ</th>
+                                <th>Nghĩa tiếng Việt</th>
+                                <th>Chủ đề</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày tạo</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var vocabulary in Model)
+                                {
+                                    <tr>
+
+                                        <td>
+                                            @vocabulary.VocabularyId
+                                        </td>
+
+                                        <td>
+                                            <strong>
+                                                @vocabulary.EnglishWord
+                                            </strong>
+
+                                            @if (!string.IsNullOrWhiteSpace(vocabulary.Pronunciation))
+                                            {
+                                                <br />
+                                                <small>
+                                                    @vocabulary.Pronunciation
+                                                </small>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            @(string.IsNullOrWhiteSpace(vocabulary.PartOfSpeech)
+                                                ? "Chưa phân loại"
+                                                : vocabulary.PartOfSpeech)
+                                        </td>
+
+                                        <td>
+                                            @vocabulary.VietnameseMeaning
+                                        </td>
+
+                                        <td>
+                                            @(vocabulary.Topic != null
+                                                ? vocabulary.Topic.TopicName
+                                                : "Chưa có chủ đề")
+                                        </td>
+
+                                        <td>
+                                            @if (vocabulary.Status == "Published")
+                                            {
+                                                <span class="topic-status active">
+                                                    Hoạt động
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="topic-status inactive">
+                                                    Đã ẩn
+                                                </span>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            @vocabulary.CreatedAt.ToString("dd/MM/yyyy")
+                                        </td>
+
+                                        <td>
+                                            <div class="topic-actions">
+
+                                                <a href="#"
+                                                   class="topic-edit-button">
+                                                    Sửa
+                                                </a>
+
+                                                <button type="button"
+                                                        class="topic-delete-button"
+                                                        onclick="alert('Chức năng xóa từ vựng sẽ được xây dựng ở bước tiếp theo.');">
+                                                    Xóa
+                                                </button>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8" class="topic-empty">
+                                        Không tìm thấy từ vựng nào.
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
+```
