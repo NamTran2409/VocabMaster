@@ -1,0 +1,279 @@
+﻿
+@model IEnumerable<VocabMaster.Models.Topic>
+
+@{
+    ViewBag.Title = "Topics Management";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Topics Management - VocabMaster</title>
+
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/site.css")" />
+</head>
+
+<body>
+
+    <div class="admin-container">
+
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-logo">
+                <h2>VocabMaster</h2>
+                <p>English Vocabulary Learning</p>
+            </div>
+
+            <div class="admin-workspace">
+                <span>ADMIN WORKSPACE</span>
+            </div>
+
+            <nav class="admin-navigation">
+
+                <a href="@Url.Action("Index", "Admin")">
+                    Dashboard
+                </a>
+
+                <a href="@Url.Action("Index", "AdminTopics")"
+                   class="active">
+                    Topics Management
+                </a>
+
+                <a href="@Url.Action("Index", "AdminVocabulary")">
+                    Vocabulary Management
+                </a>
+
+                <a href="@Url.Action("Index", "AdminQuestions")">
+                    Quiz Management
+                </a>
+
+                <a href="@Url.Action("Index", "AdminUsers")">
+                    Users
+                </a>
+
+            </nav>
+
+            <div class="admin-sidebar-bottom">
+                <a href="@Url.Action("Index", "Home")">
+                    Trở về học tập
+                </a>
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <main class="admin-main">
+
+            <!-- HEADER -->
+            <header class="admin-header">
+
+                <div>
+                    <h1>Topics Management</h1>
+                    <p>Quản lý danh sách chủ đề từ vựng trong hệ thống.</p>
+                </div>
+
+                <div class="admin-role">
+                    Administrator
+                </div>
+
+            </header>
+
+
+            <!-- WELCOME -->
+            <section class="admin-welcome">
+
+                <h2>Quản lý chủ đề</h2>
+
+                <p>
+                    Theo dõi, tìm kiếm và quản lý các chủ đề học từ vựng
+                    trong hệ thống VocabMaster.
+                </p>
+
+            </section>
+
+
+            <!-- STATISTICS -->
+            <section class="admin-statistics">
+
+                <div class="admin-stat-card">
+                    <h3>Tổng số chủ đề</h3>
+                    <strong>@Model.Count()</strong>
+                    <p>Total Topics</p>
+                </div>
+
+                <div class="admin-stat-card">
+                    <h3>Đang hoạt động</h3>
+                    <strong>
+                        @Model.Count(t => t.Status == "Active")
+                    </strong>
+                    <p>Active Topics</p>
+                </div>
+
+                <div class="admin-stat-card">
+                    <h3>Đã ẩn</h3>
+                    <strong>
+                        @Model.Count(t => t.Status != "Active")
+                    </strong>
+                    <p>Inactive Topics</p>
+                </div>
+
+                <div class="admin-stat-card">
+                    <h3>Tổng từ vựng</h3>
+                    <strong>
+                        @Model.Sum(t => t.Vocabularies.Count)
+                    </strong>
+                    <p>Total Vocabulary</p>
+                </div>
+
+            </section>
+
+
+            <!-- TOPIC MANAGEMENT -->
+            <section class="admin-content">
+
+                <div class="topic-toolbar">
+
+                    <div>
+                        <h2>Danh sách chủ đề</h2>
+                        <p>Quản lý thông tin các chủ đề hiện có.</p>
+                    </div>
+
+                    <a href="#"
+                       class="topic-add-button">
+                        + Thêm chủ đề
+                    </a>
+
+                </div>
+
+
+                <!-- SEARCH -->
+                @using (Html.BeginForm("Index", "AdminTopics", FormMethod.Get))
+                {
+                    <div class="topic-search">
+
+                        <input type="text"
+                               name="searchString"
+                               value="@ViewBag.SearchString"
+                               placeholder="Nhập tên hoặc mô tả chủ đề..." />
+
+                        <button type="submit">
+                            Tìm kiếm
+                        </button>
+
+                        <a href="@Url.Action("Index", "AdminTopics")">
+                            Làm mới
+                        </a>
+
+                    </div>
+                }
+
+
+                <!-- TABLE -->
+                <div class="topic-table-wrapper">
+
+                    <table class="topic-table">
+
+                        <thead>
+                            <tr>
+                                <th>Mã</th>
+                                <th>Tên chủ đề</th>
+                                <th>Mô tả</th>
+                                <th>Số từ vựng</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày tạo</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var topic in Model)
+                                {
+                                    <tr>
+
+                                        <td>@topic.TopicId</td>
+
+                                        <td>
+                                            <strong>@topic.TopicName</strong>
+                                        </td>
+
+                                        <td>
+                                            @(string.IsNullOrWhiteSpace(topic.Description)
+                                                ? "Chưa có mô tả"
+                                                : topic.Description)
+                                        </td>
+
+                                        <td>
+                                            @topic.Vocabularies.Count
+                                        </td>
+
+                                        <td>
+                                            @if (topic.Status == "Active")
+                                            {
+                                                <span class="topic-status active">
+                                                    Hoạt động
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="topic-status inactive">
+                                                    Đã ẩn
+                                                </span>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            @topic.CreatedAt.ToString("dd/MM/yyyy")
+                                        </td>
+
+                                        <td>
+                                            <div class="topic-actions">
+
+                                                <a href="#"
+                                                   class="topic-edit-button">
+                                                    Sửa
+                                                </a>
+
+                                                <a href="#"
+                                                   class="topic-delete-button">
+                                                    Xóa
+                                                </a>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="topic-empty">
+                                        Không tìm thấy chủ đề nào.
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
