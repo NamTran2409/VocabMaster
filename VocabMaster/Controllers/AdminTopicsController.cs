@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using System.Data.Entity;
 using VocabMaster.Models;
 
 namespace VocabMaster.Controllers
@@ -10,9 +11,13 @@ namespace VocabMaster.Controllers
         {
             using (var db = new VocabMasterDBEntities())
             {
-                var topics = db.Topics.AsQueryable();
+                // Tải cả danh sách từ vựng của từng chủ đề
+                // trước khi đóng kết nối Database.
+                var topics = db.Topics
+                    .Include(t => t.Vocabularies)
+                    .AsQueryable();
 
-                // Tìm kiếm theo tên chủ đề hoặc mô tả
+                // Tìm kiếm theo tên hoặc mô tả
                 if (!string.IsNullOrWhiteSpace(searchString))
                 {
                     topics = topics.Where(t =>
@@ -20,7 +25,7 @@ namespace VocabMaster.Controllers
                         t.Description.Contains(searchString));
                 }
 
-                // Sắp xếp theo thứ tự hiển thị
+                // Sắp xếp và lấy dữ liệu
                 var topicList = topics
                     .OrderBy(t => t.SortOrder)
                     .ThenBy(t => t.TopicName)
