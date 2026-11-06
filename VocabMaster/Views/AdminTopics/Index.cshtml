@@ -1,4 +1,4 @@
-﻿
+﻿```cshtml
 @model IEnumerable<VocabMaster.Models.Topic>
 
 @{
@@ -14,8 +14,7 @@
 
     <title>Topics Management - VocabMaster</title>
 
-    <link rel="stylesheet"
-          <link rel="stylesheet" href="@Url.Content("~/Content/site.css")" /> />
+    <link rel="stylesheet" href="@Url.Content("~/Content/site.css")" />
 </head>
 
 <body>
@@ -111,7 +110,7 @@
                 <div class="admin-stat-card">
                     <h3>Đang hoạt động</h3>
                     <strong>
-                        @Model.Count(t => t.Status == "Active")
+                        @Model.Count(t => t.Status == "Published")
                     </strong>
                     <p>Active Topics</p>
                 </div>
@@ -119,7 +118,7 @@
                 <div class="admin-stat-card">
                     <h3>Đã ẩn</h3>
                     <strong>
-                        @Model.Count(t => t.Status != "Active")
+                        @Model.Count(t => t.Status != "Published")
                     </strong>
                     <p>Inactive Topics</p>
                 </div>
@@ -145,7 +144,7 @@
                         <p>Quản lý thông tin các chủ đề hiện có.</p>
                     </div>
 
-                    <a href="#"
+                    <a href="@Url.Action("Create", "AdminTopics")"
                        class="topic-add-button">
                         + Thêm chủ đề
                     </a>
@@ -217,7 +216,7 @@
                                         </td>
 
                                         <td>
-                                            @if (topic.Status == "Active")
+                                            @if (topic.Status == "Published")
                                             {
                                                 <span class="topic-status active">
                                                     Hoạt động
@@ -238,15 +237,21 @@
                                         <td>
                                             <div class="topic-actions">
 
-                                                <a href="#"
+                                                <a href="@Url.Action("Edit", "AdminTopics", new { id = topic.TopicId })"
                                                    class="topic-edit-button">
                                                     Sửa
                                                 </a>
 
-                                                <a href="#"
-                                                   class="topic-delete-button">
-                                                    Xóa
-                                                </a>
+                                                @using (Html.BeginForm("Delete", "AdminTopics",
+                                                    new { id = topic.TopicId }, FormMethod.Post,
+                                                    new { onsubmit = "return confirm('Bạn có chắc chắn muốn xóa chủ đề này không?');" }))
+                                                {
+                                                    @Html.AntiForgeryToken()
+
+                                                    <button type="submit" class="topic-delete-button">
+                                                        Xóa
+                                                    </button>
+                                                }
 
                                             </div>
                                         </td>
@@ -277,3 +282,4 @@
 
 </body>
 </html>
+```

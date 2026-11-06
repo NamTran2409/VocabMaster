@@ -566,3 +566,64 @@ textarea {
     }
 }
 
+/* ===== TOPIC ACTION BUTTONS ===== */
+
+.topic-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+    .topic-actions form {
+        display: inline-flex;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Thiết lập kích thước chung cho hai nút */
+    .topic-actions .topic-edit-button,
+    .topic-actions button.topic-delete-button {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        width: 48px;
+        min-width: 48px;
+        height: 30px;
+        margin: 0;
+        padding: 0;
+        border: none !important;
+        border-radius: 6px !important;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1;
+        text-decoration: none;
+        text-align: center;
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+        transition: all 0.2s ease;
+    }
+
+    /* NÚT SỬA */
+    .topic-actions .topic-edit-button {
+        background: #E8EEFF !important;
+        color: #3164F4 !important;
+    }
+
+        .topic-actions .topic-edit-button:hover {
+            background: #3164F4 !important;
+            color: #FFFFFF !important;
+        }
+
+    /* NÚT XÓA */
+    .topic-actions button.topic-delete-button {
+        background: #FEECEC !important;
+        color: #DC3545 !important;
+    }
+
+        .topic-actions button.topic-delete-button:hover {
+            background: #DC3545 !important;
+            color: #FFFFFF !important;
+        }

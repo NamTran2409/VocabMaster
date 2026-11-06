@@ -148,18 +148,18 @@
                     <div class="topic-form-group">
                         <label for="Status">Trạng thái</label>
                         @Html.DropDownListFor(
-                            m => m.Status,
-                            new SelectList(
-                                new[] {
-                                    new { Value = "Active", Text = "Hoạt động" },
-                                    new { Value = "Inactive", Text = "Ngừng hoạt động" }
-                                },
-                                "Value",
-                                "Text",
-                                Model.Status
-                            ),
-                            new { @class = "topic-form-control" }
-                        )
+                       m => m.Status,
+                       new SelectList(
+                           new[] {
+                               new { Value = "Published", Text = "Đã xuất bản" }
+                           },
+                           "Value",
+                           "Text",
+                           Model.Status
+                           ),
+                       new { @class = "topic-form-control" }
+                       )
+
                     </div>
 
                     <div class="topic-form-actions">

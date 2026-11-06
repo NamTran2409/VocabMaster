@@ -259,6 +259,7 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\AdminTopics\Index.cshtml" />
     <Content Include="Views\AdminTopics\Create.cshtml" />
+    <Content Include="Views\AdminTopics\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
