@@ -784,3 +784,31 @@ textarea {
         padding: 18px;
     }
 }
+
+
+/* ===== VOCABULARY ALERT ===== */
+.admin-alert {
+    padding: 14px 18px;
+    margin: 18px 0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.admin-alert-success {
+    color: #18794E;
+    background: #E8F7EF;
+    border: 1px solid #B7E4C7;
+}
+
+.admin-alert-error {
+    color: #B42318;
+    background: #FEECEB;
+    border: 1px solid #F5C2C0;
+}
+
+.topic-actions form {
+    display: inline-flex;
+    margin: 0;
+}
+

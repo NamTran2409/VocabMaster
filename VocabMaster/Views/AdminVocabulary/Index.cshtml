@@ -1,4 +1,5 @@
-﻿@model IEnumerable<VocabMaster.Models.Vocabulary>
+﻿
+@model IEnumerable<VocabMaster.Models.Vocabulary>
 
 @{
     ViewBag.Title = "Vocabulary Management";
@@ -10,14 +11,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Vocabulary Management - VocabMaster</title>
-
     <link rel="stylesheet" href="@Url.Content("~/Content/site.css")" />
 </head>
 
 <body>
-
     <div class="admin-container">
 
         <!-- SIDEBAR -->
@@ -42,8 +40,7 @@
                     Topics Management
                 </a>
 
-                <a href="@Url.Action("Index", "AdminVocabulary")"
-                   class="active">
+                <a href="@Url.Action("Index", "AdminVocabulary")" class="active">
                     Vocabulary Management
                 </a>
 
@@ -65,7 +62,6 @@
 
         </aside>
 
-
         <!-- MAIN CONTENT -->
         <main class="admin-main">
 
@@ -83,7 +79,6 @@
 
             </header>
 
-
             <!-- WELCOME -->
             <section class="admin-welcome">
 
@@ -96,6 +91,20 @@
 
             </section>
 
+            <!-- THONG BAO -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="admin-alert admin-alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="admin-alert admin-alert-error">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
 
             <!-- STATISTICS -->
             <section class="admin-statistics">
@@ -132,7 +141,6 @@
 
             </section>
 
-
             <!-- VOCABULARY MANAGEMENT -->
             <section class="admin-content">
 
@@ -149,7 +157,6 @@
                     </a>
 
                 </div>
-
 
                 <!-- SEARCH AND FILTER -->
                 @using (Html.BeginForm("Index", "AdminVocabulary", FormMethod.Get))
@@ -186,7 +193,6 @@
 
                     </div>
                 }
-
 
                 <!-- TABLE -->
                 <div class="topic-table-wrapper">
@@ -270,16 +276,27 @@
                                         <td>
                                             <div class="topic-actions">
 
-                                                <a href="#"
+                                                <!-- NUT SUA -->
+                                                <a href="@Url.Action("Edit", "AdminVocabulary", new { id = vocabulary.VocabularyId })"
                                                    class="topic-edit-button">
                                                     Sửa
                                                 </a>
 
-                                                <button type="button"
-                                                        class="topic-delete-button"
-                                                        onclick="alert('Chức năng xóa từ vựng sẽ được xây dựng ở bước tiếp theo.');">
-                                                    Xóa
-                                                </button>
+                                                <!-- NUT XOA -->
+                                                @using (Html.BeginForm(
+                                                    "Delete",
+                                                    "AdminVocabulary",
+                                                    new { id = vocabulary.VocabularyId },
+                                                    FormMethod.Post,
+                                                    new { onsubmit = "return confirm('Bạn có chắc chắn muốn xóa từ vựng này không?');" }))
+                                                {
+                                                    @Html.AntiForgeryToken()
+
+                                                    <button type="submit"
+                                                            class="topic-delete-button">
+                                                        Xóa
+                                                    </button>
+                                                }
 
                                             </div>
                                         </td>
@@ -307,7 +324,5 @@
         </main>
 
     </div>
-
 </body>
 </html>
-```

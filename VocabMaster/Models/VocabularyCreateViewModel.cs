@@ -6,6 +6,8 @@ namespace VocabMaster.Models
 {
     public class VocabularyCreateViewModel
     {
+        public int VocabularyId { get; set; }
+
         [Required(ErrorMessage = "Vui lòng nhập từ tiếng Anh.")]
         [StringLength(150)]
         public string EnglishWord { get; set; }
@@ -32,5 +34,15 @@ namespace VocabMaster.Models
         public HttpPostedFileBase ImageFile { get; set; }
 
         public HttpPostedFileBase AudioFile { get; set; }
+
+        // Lưu đường dẫn ảnh và âm thanh hiện tại
+        public string CurrentImageUrl { get; set; }
+
+        public string CurrentAudioUrl { get; set; }
+
+        // Đánh dấu nếu muốn xóa ảnh hoặc âm thanh cũ
+        public bool RemoveImage { get; set; }
+
+        public bool RemoveAudio { get; set; }
     }
 }

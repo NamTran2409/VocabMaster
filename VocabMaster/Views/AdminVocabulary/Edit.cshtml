@@ -1,0 +1,227 @@
+﻿
+@model VocabMaster.Models.VocabularyCreateViewModel
+
+@{
+    Layout = null;
+    ViewBag.Title = "Edit Vocabulary";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit Vocabulary - VocabMaster</title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/site.css")" />
+</head>
+<body>
+
+    <div class="admin-container">
+
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <h2>VocabMaster</h2>
+                <p>English Vocabulary Learning</p>
+            </div>
+
+            <div class="admin-workspace">ADMIN WORKSPACE</div>
+
+            <nav class="admin-navigation">
+                <a href="@Url.Action("Index", "Admin")">Dashboard</a>
+                <a href="@Url.Action("Index", "AdminTopics")">Topics Management</a>
+                <a href="@Url.Action("Index", "AdminVocabulary")" class="active">
+                    Vocabulary Management
+                </a>
+                <a href="@Url.Action("Index", "AdminQuestions")">Quiz Management</a>
+                <a href="@Url.Action("Index", "AdminUsers")">Users</a>
+            </nav>
+
+            <div class="admin-sidebar-bottom">
+                <strong>Administrator</strong>
+                <p>Quản trị viên</p>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+
+            <div class="admin-header">
+                <div>
+                    <h1>Chỉnh sửa từ vựng</h1>
+                    <p>Cập nhật thông tin từ vựng trong hệ thống.</p>
+                </div>
+
+                <a href="@Url.Action("Index", "AdminVocabulary")"
+                   class="topic-cancel-button">
+                    Quay lại
+                </a>
+            </div>
+
+            <div class="vocabulary-create-container">
+
+                <div class="create-heading">
+                    <h2>Thông tin từ vựng</h2>
+                    <p>Chỉnh sửa nội dung và tài nguyên của từ vựng.</p>
+                </div>
+
+                @using (Html.BeginForm(
+                    "Edit",
+                    "AdminVocabulary",
+                    FormMethod.Post,
+                    new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.HiddenFor(m => m.VocabularyId)
+
+                    @Html.ValidationSummary(false, "", new { @class = "validation-summary" })
+
+                    <div class="vocabulary-form-grid">
+
+                        <div class="form-group">
+                            <label>Từ tiếng Anh <span>*</span></label>
+                            @Html.TextBoxFor(m => m.EnglishWord,
+                                new { @class = "form-control", placeholder = "Nhập từ tiếng Anh" })
+                            @Html.ValidationMessageFor(m => m.EnglishWord)
+                        </div>
+
+                        <div class="form-group">
+                            <label>Loại từ</label>
+                            @Html.DropDownListFor(
+                                m => m.PartOfSpeech,
+                                new SelectList(
+                                    new[]
+                                    {
+                                        new { Value = "Noun", Text = "Noun - Danh từ" },
+                                        new { Value = "Verb", Text = "Verb - Động từ" },
+                                        new { Value = "Adjective", Text = "Adjective - Tính từ" },
+                                        new { Value = "Adverb", Text = "Adverb - Trạng từ" },
+                                        new { Value = "Other", Text = "Other - Khác" }
+                                    },
+                                    "Value",
+                                    "Text",
+                                    Model.PartOfSpeech
+                                ),
+                                "-- Chọn loại từ --",
+                                new { @class = "form-control" })
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nghĩa tiếng Việt <span>*</span></label>
+                            @Html.TextAreaFor(m => m.VietnameseMeaning,
+                                new { @class = "form-control", rows = "3", placeholder = "Nhập nghĩa tiếng Việt" })
+                            @Html.ValidationMessageFor(m => m.VietnameseMeaning)
+                        </div>
+
+                        <div class="form-group">
+                            <label>Phiên âm</label>
+                            @Html.TextBoxFor(m => m.Pronunciation,
+                                new { @class = "form-control", placeholder = "Ví dụ: /ˈæp.əl/" })
+                        </div>
+
+                        <div class="form-group">
+                            <label>Chủ đề <span>*</span></label>
+                            @Html.DropDownListFor(
+                                m => m.TopicId,
+                                new SelectList(
+                                    ViewBag.Topics,
+                                    "TopicId",
+                                    "TopicName",
+                                    Model.TopicId
+                                ),
+                                "-- Chọn chủ đề --",
+                                new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.TopicId)
+                        </div>
+
+                        <div class="form-group">
+                            <label>Câu ví dụ tiếng Anh</label>
+                            @Html.TextAreaFor(m => m.ExampleSentence,
+                                new { @class = "form-control", rows = "3", placeholder = "Nhập câu ví dụ" })
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Nghĩa câu ví dụ</label>
+                            @Html.TextAreaFor(m => m.ExampleMeaning,
+                                new { @class = "form-control", rows = "3", placeholder = "Nhập nghĩa câu ví dụ" })
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Ảnh hiện tại</label>
+
+                            @if (!string.IsNullOrEmpty(Model.CurrentImageUrl))
+                            {
+                                <div class="image-preview-box">
+                                    <img src="@Url.Content(Model.CurrentImageUrl)"
+                                         alt="Ảnh từ vựng hiện tại"
+                                         style="display:block; max-width:180px; max-height:180px;" />
+                                </div>
+
+                                <label>
+                                    @Html.CheckBoxFor(m => m.RemoveImage)
+                                    Xóa ảnh hiện tại
+                                </label>
+                            }
+                            else
+                            {
+                                <p>Chưa có ảnh.</p>
+                            }
+
+                            <label>Chọn ảnh mới (không bắt buộc)</label>
+                            <input type="file"
+                                   name="ImageFile"
+                                   class="form-control"
+                                   accept=".jpg,.jpeg,.png,.webp" />
+                            <small>JPG, JPEG, PNG, WEBP. Tối đa 2MB.</small>
+                            @Html.ValidationMessageFor(m => m.ImageFile)
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Âm thanh hiện tại</label>
+
+                            @if (!string.IsNullOrEmpty(Model.CurrentAudioUrl))
+                            {
+                                <audio controls>
+                                    <source src="@Url.Content(Model.CurrentAudioUrl)" />
+                                    Trình duyệt không hỗ trợ phát âm thanh.
+                                </audio>
+
+                                <label>
+                                    @Html.CheckBoxFor(m => m.RemoveAudio)
+                                    Xóa âm thanh hiện tại
+                                </label>
+                            }
+                            else
+                            {
+                                <p>Chưa có âm thanh.</p>
+                            }
+
+                            <label>Chọn âm thanh mới (không bắt buộc)</label>
+                            <input type="file"
+                                   name="AudioFile"
+                                   class="form-control"
+                                   accept=".mp3,.wav,.ogg" />
+                            <small>MP3, WAV, OGG. Tối đa 10MB.</small>
+                            @Html.ValidationMessageFor(m => m.AudioFile)
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="@Url.Action("Index", "AdminVocabulary")"
+                           class="topic-cancel-button">
+                            Hủy
+                        </a>
+
+                        <button type="submit" class="topic-save-button">
+                            Lưu thay đổi
+                        </button>
+                    </div>
+                }
+
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>

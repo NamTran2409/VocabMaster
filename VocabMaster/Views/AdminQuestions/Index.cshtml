@@ -1,0 +1,285 @@
+﻿
+@model IEnumerable<VocabMaster.Models.Quizze>
+
+@{
+    ViewBag.Title = "Quiz Management";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Management - VocabMaster</title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/site.css")" />
+</head>
+
+<body>
+    <div class="admin-container">
+
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-logo">
+                <h2>VocabMaster</h2>
+                <p>English Vocabulary Learning</p>
+            </div>
+
+            <div class="admin-workspace">
+                <span>ADMIN WORKSPACE</span>
+            </div>
+
+            <nav class="admin-navigation">
+
+                <a href="@Url.Action("Index", "Admin")">
+                    Dashboard
+                </a>
+
+                <a href="@Url.Action("Index", "AdminTopics")">
+                    Topics Management
+                </a>
+
+                <a href="@Url.Action("Index", "AdminVocabulary")">
+                    Vocabulary Management
+                </a>
+
+                <a href="@Url.Action("Index", "AdminQuestions")" class="active">
+                    Quiz Management
+                </a>
+
+                <a href="@Url.Action("Index", "AdminUsers")">
+                    Users
+                </a>
+
+            </nav>
+
+            <div class="admin-sidebar-bottom">
+                <a href="@Url.Action("Index", "Home")">
+                    Trở về học tập
+                </a>
+            </div>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="admin-main">
+
+            <!-- HEADER -->
+            <header class="admin-header">
+
+                <div>
+                    <h1>Quiz Management</h1>
+                    <p>Quản lý các bài kiểm tra trong hệ thống.</p>
+                </div>
+
+                <div class="admin-role">
+                    Administrator
+                </div>
+
+            </header>
+
+            <!-- WELCOME -->
+            <section class="admin-welcome">
+
+                <h2>Quản lý bài kiểm tra</h2>
+
+                <p>
+                    Theo dõi, tìm kiếm và quản lý các bài kiểm tra
+                    tiếng Anh trong hệ thống VocabMaster.
+                </p>
+
+            </section>
+
+            <!-- STATISTICS -->
+            <section class="admin-statistics">
+
+                <div class="admin-stat-card">
+                    <h3>Tổng số bài kiểm tra</h3>
+                    <strong>@(Model == null ? 0 : Model.Count())</strong>
+                    <p>Total Quizzes</p>
+                </div>
+
+                <div class="admin-stat-card">
+                    <h3>Đang hoạt động</h3>
+                    <strong>
+                        @(Model == null ? 0 : Model.Count(q => q.Status == "Published"))
+                    </strong>
+                    <p>Published Quizzes</p>
+                </div>
+
+                <div class="admin-stat-card">
+                    <h3>Đã ẩn</h3>
+                    <strong>
+                        @(Model == null ? 0 : Model.Count(q => q.Status != "Published"))
+                    </strong>
+                    <p>Inactive Quizzes</p>
+                </div>
+
+                <div class="admin-stat-card">
+                    <h3>Số chủ đề</h3>
+                    <strong>@ViewBag.TopicCount</strong>
+                    <p>Total Topics</p>
+                </div>
+
+            </section>
+
+            <!-- QUIZ MANAGEMENT -->
+            <section class="admin-content">
+
+                <div class="topic-toolbar">
+
+                    <div>
+                        <h2>Danh sách bài kiểm tra</h2>
+                        <p>Quản lý thông tin các bài kiểm tra hiện có.</p>
+                    </div>
+
+                </div>
+
+                <!-- SEARCH AND FILTER -->
+                @using (Html.BeginForm("Index", "AdminQuestions", FormMethod.Get))
+                {
+                    <div class="topic-search">
+
+                        <input type="text"
+                               name="searchString"
+                               value="@ViewBag.SearchString"
+                               placeholder="Nhập tên bài kiểm tra..." />
+
+                        <select name="topicId">
+                            <option value="">Tất cả chủ đề</option>
+
+                            @if (ViewBag.Topics != null)
+                            {
+                                foreach (var topic in ViewBag.Topics)
+                                {
+                                    <option value="@topic.TopicId"
+                                            @(ViewBag.SelectedTopicId != null && (int)ViewBag.SelectedTopicId == topic.TopicId ? "selected" : "")>
+                                        @topic.TopicName
+                                    </option>
+                                }
+                            }
+                        </select>
+
+                        <button type="submit">
+                            Tìm kiếm
+                        </button>
+
+                        <a href="@Url.Action("Index", "AdminQuestions")">
+                            Làm mới
+                        </a>
+
+                    </div>
+                }
+
+                <!-- TABLE -->
+                <div class="topic-table-wrapper">
+
+                    <table class="topic-table">
+
+                        <thead>
+                            <tr>
+                                <th>Mã</th>
+                                <th>Tên bài kiểm tra</th>
+                                <th>Chủ đề</th>
+                                <th>Số câu hỏi</th>
+                                <th>Thời gian</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày tạo</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var quiz in Model)
+                                {
+                                    <tr>
+
+                                        <td>
+                                            @quiz.QuizId
+                                        </td>
+
+                                        <td>
+                                            <strong>
+                                                @quiz.QuizTitle
+                                            </strong>
+
+                                            @if (!string.IsNullOrWhiteSpace(quiz.Description))
+                                            {
+                                                <br />
+                                                <small>
+                                                    @quiz.Description
+                                                </small>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            @(quiz.Topic != null
+                                                ? quiz.Topic.TopicName
+                                                : "Chưa phân chủ đề")
+                                        </td>
+
+                                        <td>
+                                            @quiz.QuestionCount
+                                        </td>
+
+                                        <td>
+                                            @if (quiz.TimeLimitSeconds.HasValue)
+                                            {
+                                                var minutes = quiz.TimeLimitSeconds.Value / 60;
+                                                var seconds = quiz.TimeLimitSeconds.Value % 60;
+
+                                                @($"{minutes} phút {seconds} giây")
+                                            }
+                                            else
+                                            {
+                                                @:Không giới hạn
+                                            }
+                                        </td>
+
+                                        <td>
+                                            @if (quiz.Status == "Published")
+                                            {
+                                                <span class="topic-status active">
+                                                    Hoạt động
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="topic-status inactive">
+                                                    Đã ẩn
+                                                </span>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            @quiz.CreatedAt.ToString("dd/MM/yyyy")
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="topic-empty">
+                                        Chưa có bài kiểm tra nào.
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+</body>
+</html>
