@@ -1,0 +1,155 @@
+﻿@model VocabMaster.Models.User
+
+@{
+    ViewBag.Title = "User Details";
+    Layout = null;
+
+    var displayName = string.IsNullOrWhiteSpace(Model.DisplayName)
+        ? Model.Username
+        : Model.DisplayName;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Details - VocabMaster</title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/site.css?v=4")" />
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-brand">
+                <div class="admin-brand-name">VocabMaster</div>
+                <div class="admin-brand-subtitle">ADMIN WORKSPACE</div>
+            </div>
+
+            <nav class="admin-sidebar-menu">
+                <a href="@Url.Action("Index", "Admin")" class="admin-menu-item">Dashboard</a>
+                <a href="@Url.Action("Index", "AdminTopics")" class="admin-menu-item">Topics Management</a>
+                <a href="@Url.Action("Index", "AdminVocabulary")" class="admin-menu-item">Vocabulary Management</a>
+                <a href="@Url.Action("Index", "AdminQuestions")" class="admin-menu-item">Quiz Management</a>
+                <a href="@Url.Action("Index", "AdminUsers")" class="admin-menu-item active">Users</a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-topbar">
+                <div>
+                    <div class="admin-page-label">ADMIN WORKSPACE</div>
+                    <h1>User Details</h1>
+                </div>
+                <div class="admin-user-info">
+                    <span>Quản trị viên</span>
+                </div>
+            </header>
+
+            <section class="admin-content">
+                <div class="user-detail-heading">
+                    <div>
+                        <h2>Thông tin người dùng</h2>
+                        <p>Xem thông tin tài khoản và hoạt động học tập của người dùng.</p>
+                    </div>
+
+                    <a href="@Url.Action("Index", "AdminUsers")" class="user-back-button">
+                        Quay lại danh sách
+                    </a>
+                </div>
+
+                <div class="user-detail-profile">
+                    <div class="user-detail-avatar">
+                        @if (!string.IsNullOrWhiteSpace(Model.AvatarUrl))
+                        {
+                            <img src="@Url.Content(Model.AvatarUrl)" alt="Avatar" />
+                        }
+                        else
+                        {
+                            @(string.IsNullOrWhiteSpace(displayName)
+                                ? "?"
+                                : displayName.Substring(0, 1).ToUpper())
+                        }
+                    </div>
+
+                    <div class="user-detail-profile-info">
+                        <h3>@displayName</h3>
+                        <p>@("@" + Model.Username)</p>
+
+                        <div class="user-detail-badges">
+                            <span class="user-role-badge">@Model.Role</span>
+
+                            @if (Model.IsActive)
+                            {
+                                <span class="user-status-badge active">Đang hoạt động</span>
+                            }
+                            else
+                            {
+                                <span class="user-status-badge locked">Đã khóa</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="user-detail-grid">
+                    <div class="user-detail-card">
+                        <h3>Thông tin tài khoản</h3>
+
+                        <div class="user-detail-row">
+                            <span>ID người dùng</span>
+                            <strong>#@Model.UserId</strong>
+                        </div>
+
+                        <div class="user-detail-row">
+                            <span>Username</span>
+                            <strong>@Model.Username</strong>
+                        </div>
+
+                        <div class="user-detail-row">
+                            <span>Họ và tên</span>
+                            <strong>@(string.IsNullOrWhiteSpace(Model.DisplayName) ? "Chưa cập nhật" : Model.DisplayName)</strong>
+                        </div>
+
+                        <div class="user-detail-row">
+                            <span>Email</span>
+                            <strong>@Model.Email</strong>
+                        </div>
+
+                        <div class="user-detail-row">
+                            <span>Vai trò</span>
+                            <strong>@Model.Role</strong>
+                        </div>
+                    </div>
+
+                    <div class="user-detail-card">
+                        <h3>Hoạt động học tập</h3>
+
+                        <div class="user-detail-row">
+                            <span>Số lượt làm Quiz</span>
+                            <strong>@Model.QuizAttempts.Count</strong>
+                        </div>
+
+                        <div class="user-detail-row">
+                            <span>Từ vựng đang theo dõi</span>
+                            <strong>@Model.UserVocabularyProgresses.Count</strong>
+                        </div>
+
+                        <div class="user-detail-row">
+                            <span>Ngày tạo tài khoản</span>
+                            <strong>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</strong>
+                        </div>
+
+                        <div class="user-detail-row">
+                            <span>Đăng nhập gần nhất</span>
+                            <strong>
+                                @(Model.LastLoginAt.HasValue
+                                    ? Model.LastLoginAt.Value.ToString("dd/MM/yyyy HH:mm")
+                                    : "Chưa đăng nhập")
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

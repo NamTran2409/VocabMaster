@@ -1,0 +1,348 @@
+﻿
+@model IEnumerable<VocabMaster.Models.User>
+
+@{
+    ViewBag.Title = "Users Management";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Users Management - VocabMaster</title>
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/site.css?v=3")" />
+</head>
+<body>
+
+    <div class="admin-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-brand">
+                <div class="admin-brand-name">VocabMaster</div>
+                <div class="admin-brand-subtitle">ADMIN WORKSPACE</div>
+            </div>
+
+            <nav class="admin-sidebar-menu">
+
+                <a href="@Url.Action("Index", "Admin")"
+                   class="admin-menu-item">
+                    Dashboard
+                </a>
+
+                <a href="@Url.Action("Index", "AdminTopics")"
+                   class="admin-menu-item">
+                    Topics Management
+                </a>
+
+                <a href="@Url.Action("Index", "AdminVocabulary")"
+                   class="admin-menu-item">
+                    Vocabulary Management
+                </a>
+
+                <a href="@Url.Action("Index", "AdminQuestions")"
+                   class="admin-menu-item">
+                    Quiz Management
+                </a>
+
+                <a href="@Url.Action("Index", "AdminUsers")"
+                   class="admin-menu-item active">
+                    Users
+                </a>
+
+            </nav>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="admin-main">
+
+            <header class="admin-topbar">
+                <div>
+                    <div class="admin-page-label">ADMIN WORKSPACE</div>
+                    <h1>Users Management</h1>
+                </div>
+
+                <div class="admin-user-info">
+                    <span>Quản trị viên</span>
+                </div>
+            </header>
+
+            <section class="admin-content">
+
+                <div class="admin-welcome">
+                    <h2>Quản lý người dùng</h2>
+                    <p>
+                        Theo dõi thông tin và quản lý trạng thái tài khoản
+                        người dùng trong hệ thống VocabMaster.
+                    </p>
+                </div>
+
+                <!-- STATISTICS -->
+                <div class="user-statistics">
+
+                    <div class="user-stat-card">
+                        <div class="user-stat-label">Tổng người dùng</div>
+                        <div class="user-stat-number">
+                            @ViewBag.TotalUsers
+                        </div>
+                    </div>
+
+                    <div class="user-stat-card">
+                        <div class="user-stat-label">Đang hoạt động</div>
+                        <div class="user-stat-number">
+                            @ViewBag.ActiveUsers
+                        </div>
+                    </div>
+
+                    <div class="user-stat-card">
+                        <div class="user-stat-label">Đã khóa</div>
+                        <div class="user-stat-number">
+                            @ViewBag.LockedUsers
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- SUCCESS / ERROR MESSAGE -->
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="admin-success-message">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="admin-error-message">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+
+                <!-- SEARCH AND FILTER -->
+                <div class="user-toolbar">
+
+                    @using (Html.BeginForm("Index", "AdminUsers", FormMethod.Get))
+                    {
+                        <div class="user-filter-row">
+
+                            <input type="text"
+                                   name="searchString"
+                                   value="@ViewBag.SearchString"
+                                   class="user-search-input"
+                                   placeholder="Tìm theo tên, username hoặc email..." />
+
+                            <select name="role" class="user-filter-select">
+                                <option value="">Tất cả vai trò</option>
+
+                                <option value="Admin"
+                                        @(ViewBag.Role == "Admin" ? "selected" : "")>
+                                    Admin
+                                </option>
+
+                                <option value="User"
+                                        @(ViewBag.Role == "User" ? "selected" : "")>
+                                    User
+                                </option>
+                            </select>
+
+                            <select name="status" class="user-filter-select">
+                                <option value="">Tất cả trạng thái</option>
+
+                                <option value="active"
+                                        @(ViewBag.Status == "active" ? "selected" : "")>
+                                    Đang hoạt động
+                                </option>
+
+                                <option value="locked"
+                                        @(ViewBag.Status == "locked" ? "selected" : "")>
+                                    Đã khóa
+                                </option>
+                            </select>
+
+                            <button type="submit" class="user-search-button">
+                                Tìm kiếm
+                            </button>
+
+                            <a href="@Url.Action("Index", "AdminUsers")"
+                               class="user-reset-button">
+                                Đặt lại
+                            </a>
+
+                        </div>
+                    }
+
+                </div>
+
+                <!-- USER TABLE -->
+                <div class="user-table-card">
+
+                    <div class="user-table-heading">
+                        <div>
+                            <h3>Danh sách người dùng</h3>
+                            <p>Thông tin các tài khoản trong hệ thống</p>
+                        </div>
+
+                        <span class="user-result-count">
+                            @Model.Count() người dùng
+                        </span>
+                    </div>
+
+                    <div class="admin-table-wrapper">
+
+                        <table class="admin-table">
+
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Người dùng</th>
+                                    <th>Email</th>
+                                    <th>Vai trò</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Đăng nhập cuối</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                @if (Model != null && Model.Any())
+                                {
+                                    foreach (var user in Model)
+                                    {
+                                        <tr>
+
+                                            <td>#@user.UserId</td>
+
+                                            <td>
+                                                <div class="user-name-cell">
+                                                    <div class="user-avatar">
+                                                        @if (!string.IsNullOrWhiteSpace(user.AvatarUrl))
+                                                        {
+                                                            <img src="@Url.Content(user.AvatarUrl)"
+                                                                 alt="Avatar" />
+                                                        }
+                                                        else
+                                                        {
+                                                            @(string.IsNullOrWhiteSpace(user.DisplayName)
+                                                            ? "?"
+                                                            : user.DisplayName.Substring(0, 1).ToUpper())
+                                                        }
+                                                    </div>
+
+                                                    <div>
+                                                        <div class="user-display-name">
+                                                            @(string.IsNullOrWhiteSpace(user.DisplayName)
+                                                            ? user.Username
+                                                            : user.DisplayName)
+                                                        </div>
+
+                                                        <div class="user-username">
+                                                            @("@" + user.Username)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td>@user.Email</td>
+
+                                            <td>
+                                                <span class="user-role-badge">
+                                                    @user.Role
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                @user.CreatedAt.ToString("dd/MM/yyyy")
+                                            </td>
+
+                                            <td>
+                                                @(user.LastLoginAt.HasValue
+                                                ? user.LastLoginAt.Value.ToString("dd/MM/yyyy HH:mm")
+                                                : "Chưa đăng nhập")
+                                            </td>
+
+                                            <td>
+                                                @if (user.IsActive)
+                                                {
+                                                    <span class="user-status-badge active">
+                                                        Hoạt động
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="user-status-badge locked">
+                                                        Đã khóa
+                                                    </span>
+                                                }
+                                            </td>
+
+                                            <td>
+                                                <div class="user-action-buttons">
+
+                                                    <a href="@Url.Action(
+                                                    "Details",
+                                                    "AdminUsers",
+                                                    new { id = user.UserId })"
+                                                       class="user-detail-button">
+                                                        Chi tiết
+                                                    </a>
+
+                                                    @if (user.Role != "Admin")
+                                                    {
+                                                        using (Html.BeginForm(
+                                                            "ToggleStatus",
+                                                            "AdminUsers",
+                                                            FormMethod.Post,
+                                                            new { @class = "user-status-form" }))
+                                                        {
+                                                            @Html.AntiForgeryToken()
+
+                                                            <input type="hidden"
+                                                                   name="id"
+                                                                   value="@user.UserId" />
+
+                                                            <button type="submit"
+                                                                    class="@(user.IsActive ? "user-lock-button" : "user-unlock-button")"
+                                                                    onclick="return confirm('Bạn có chắc chắn muốn @(user.IsActive ? "khóa" : "mở khóa") tài khoản này không?');">
+                                                                @(user.IsActive ? "Khóa" : "Mở khóa")
+                                                            </button>
+                                                        }
+                                                    }
+
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="8" class="user-empty-state">
+                                            Không tìm thấy người dùng nào.
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

@@ -132,6 +132,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AdminQuestionsController.cs" />
     <Compile Include="Controllers\AdminTopicsController.cs" />
+    <Compile Include="Controllers\AdminUsersController.cs" />
     <Compile Include="Controllers\AdminVocabularyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -272,6 +273,8 @@
     <Content Include="Views\AdminQuestions\Questions.cshtml" />
     <Content Include="Views\AdminQuestions\CreateQuestion.cshtml" />
     <Content Include="Views\AdminQuestions\EditQuestion.cshtml" />
+    <Content Include="Views\AdminUsers\Index.cshtml" />
+    <Content Include="Views\AdminUsers\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
