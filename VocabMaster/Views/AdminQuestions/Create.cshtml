@@ -1,0 +1,186 @@
+﻿
+@model VocabMaster.Models.Quizze
+
+@{
+    ViewBag.Title = "Create Quiz";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Quiz - VocabMaster</title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/site.css")" />
+</head>
+
+<body>
+    <div class="admin-container">
+
+        <!-- SIDEBAR -->
+        <aside class="admin-sidebar">
+
+            <div class="admin-logo">
+                <h2>VocabMaster</h2>
+                <p>English Vocabulary Learning</p>
+            </div>
+
+            <div class="admin-workspace">
+                <span>ADMIN WORKSPACE</span>
+            </div>
+
+            <nav class="admin-navigation">
+                <a href="@Url.Action("Index", "Admin")">Dashboard</a>
+                <a href="@Url.Action("Index", "AdminTopics")">Topics Management</a>
+                <a href="@Url.Action("Index", "AdminVocabulary")">Vocabulary Management</a>
+                <a href="@Url.Action("Index", "AdminQuestions")" class="active">Quiz Management</a>
+                <a href="@Url.Action("Index", "AdminUsers")">Users</a>
+            </nav>
+
+            <div class="admin-sidebar-bottom">
+                <a href="@Url.Action("Index", "Home")">Trở về học tập</a>
+            </div>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="admin-main">
+
+            <header class="admin-header">
+                <div>
+                    <h1>Create Quiz</h1>
+                    <p>Thêm bài kiểm tra mới vào hệ thống.</p>
+                </div>
+
+                <div class="admin-role">
+                    Administrator
+                </div>
+            </header>
+
+            <section class="admin-content">
+
+                <div class="create-heading">
+                    <h2>Thông tin bài kiểm tra</h2>
+                    <p>Nhập thông tin cơ bản cho bài kiểm tra mới.</p>
+                </div>
+
+                @using (Html.BeginForm("Create", "AdminQuestions",
+                    FormMethod.Post, new { @class = "vocabulary-create-container" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+                    <div class="vocabulary-form-grid">
+
+                        <!-- TEN BAI KIEM TRA -->
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.QuizTitle, "Tên bài kiểm tra")
+
+                            @Html.TextBoxFor(m => m.QuizTitle,
+                                new
+                                     {
+                                    @class = "form-control",
+                                    placeholder = "Ví dụ: Food Vocabulary Quiz",
+                                    maxlength = "200"
+                                })
+
+                            @Html.ValidationMessageFor(m => m.QuizTitle)
+                        </div>
+
+                        <!-- CHU DE -->
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.TopicId, "Chủ đề")
+
+                            @Html.DropDownListFor(
+                                m => m.TopicId,
+                                new SelectList(
+                                    ViewBag.Topics,
+                                    "TopicId",
+                                    "TopicName",
+                                    Model == null ? null : Model.TopicId
+                                ),
+                                "-- Chọn chủ đề --",
+                                new { @class = "form-control" }
+                            )
+
+                            @Html.ValidationMessageFor(m => m.TopicId)
+                        </div>
+
+                        <!-- MO TA -->
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Description, "Mô tả")
+
+                            @Html.TextAreaFor(m => m.Description,
+                                new
+                                     {
+                                    @class = "form-control",
+                                    rows = "4",
+                                    placeholder = "Nhập mô tả cho bài kiểm tra..."
+                                })
+
+                            @Html.ValidationMessageFor(m => m.Description)
+                        </div>
+
+                        <!-- THOI GIAN -->
+                        <div class="form-group">
+                            <label for="timeLimitMinutes">
+                                Thời gian làm bài (phút)
+                            </label>
+
+                            <input type="number"
+                                   id="timeLimitMinutes"
+                                   name="timeLimitMinutes"
+                                   class="form-control"
+                                   min="1"
+                                   placeholder="Ví dụ: 15" />
+
+                            <small>Để trống nếu không giới hạn thời gian.</small>
+                        </div>
+
+                        <!-- TRANG THAI -->
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Status, "Trạng thái")
+
+                            @Html.DropDownListFor(
+                                m => m.Status,
+                                new SelectList(new[]
+                                {
+                                    new SelectListItem {
+                                        Text = "Published - Công khai",
+                                        Value = "Published"
+                                    },
+                                    new SelectListItem {
+                                        Text = "Draft - Bản nháp",
+                                        Value = "Draft"
+                                    }
+                                }, "Value", "Text", "Draft"),
+                                new { @class = "form-control" }
+                            )
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <a href="@Url.Action("Index", "AdminQuestions")"
+                           class="topic-cancel-button">
+                            Hủy
+                        </a>
+
+                        <button type="submit" class="topic-save-button">
+                            Lưu bài kiểm tra
+                        </button>
+
+                    </div>
+                }
+
+            </section>
+
+        </main>
+
+    </div>
+</body>
+</html>

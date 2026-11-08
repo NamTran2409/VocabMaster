@@ -1,0 +1,227 @@
+﻿
+@model IEnumerable<VocabMaster.Models.Question>
+
+@{
+    ViewBag.Title = "Question Management";
+    Layout = null;
+
+    var quiz = ViewBag.Quiz as VocabMaster.Models.Quizze;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Question Management - VocabMaster</title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/site.css")" />
+</head>
+
+<body>
+    <div class="admin-container">
+
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <h2>VocabMaster</h2>
+                <p>English Vocabulary Learning</p>
+            </div>
+
+            <div class="admin-workspace">
+                <span>ADMIN WORKSPACE</span>
+            </div>
+
+            <nav class="admin-navigation">
+                <a href="@Url.Action("Index", "Admin")">Dashboard</a>
+                <a href="@Url.Action("Index", "AdminTopics")">Topics Management</a>
+                <a href="@Url.Action("Index", "AdminVocabulary")">Vocabulary Management</a>
+                <a href="@Url.Action("Index", "AdminQuestions")" class="active">Quiz Management</a>
+                <a href="@Url.Action("Index", "AdminUsers")">Users</a>
+            </nav>
+
+            <div class="admin-sidebar-bottom">
+                <a href="@Url.Action("Index", "Home")">Trở về học tập</a>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+
+            <header class="admin-header">
+                <div>
+                    <h1>Question Management</h1>
+                    <p>Quản lý câu hỏi của bài kiểm tra.</p>
+                </div>
+                <div class="admin-role">Administrator</div>
+            </header>
+
+            <section class="admin-welcome">
+                <h2>@(quiz != null ? quiz.QuizTitle : "Question Management")</h2>
+
+                @if (quiz != null)
+                {
+                    <p>
+                        Chủ đề:
+                        @(quiz.Topic != null
+                            ? quiz.Topic.TopicName
+                            : "Chưa phân chủ đề")
+                    </p>
+                }
+            </section>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="admin-success-message">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="admin-success-message" role="alert">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            <section class="admin-statistics">
+                <div class="admin-stat-card">
+                    <h3>Tổng số câu hỏi</h3>
+                    <strong>@Model.Count()</strong>
+                    <p>Total Questions</p>
+                </div>
+
+                <div class="admin-stat-card">
+                    <h3>Thời gian làm bài</h3>
+                    <strong>
+                        @(quiz != null && quiz.TimeLimitSeconds.HasValue
+                            ? (quiz.TimeLimitSeconds.Value / 60) + " phút"
+                            : "Không giới hạn")
+                    </strong>
+                    <p>Time Limit</p>
+                </div>
+            </section>
+
+            <section class="admin-content">
+
+                <div class="topic-toolbar">
+                    <div>
+                        <h2>Danh sách câu hỏi</h2>
+                        <p>Các câu hỏi thuộc bài kiểm tra này.</p>
+                    </div>
+
+                    <div>
+                        @if (quiz != null)
+                        {
+                            <a href="@Url.Action(
+                                "CreateQuestion",
+                                "AdminQuestions",
+                                new { quizId = quiz.QuizId })"
+                               class="topic-add-button">
+                                + Thêm câu hỏi
+                            </a>
+                        }
+
+                        <a href="@Url.Action(
+                            "Index",
+                            "AdminQuestions")"
+                           class="topic-cancel-button">
+                            Quay lại
+                        </a>
+                    </div>
+                </div>
+
+                <div class="topic-table-wrapper">
+                    <table class="topic-table">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Nội dung câu hỏi</th>
+                                <th>Số đáp án</th>
+                                <th>Đáp án đúng</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @if (Model.Any())
+                            {
+                                foreach (var question in Model)
+                                {
+                                    <tr>
+                                        <td>@question.SortOrder</td>
+
+                                        <td>
+                                            <strong>@question.QuestionText</strong>
+                                        </td>
+
+                                        <td>
+                                            @question.QuestionOptions.Count
+                                        </td>
+
+                                        <td>
+                                            @{
+                                                var correctOption =
+                                                    question.QuestionOptions
+                                                        .FirstOrDefault(o => o.IsCorrect);
+                                            }
+
+                                            @(correctOption != null
+                                                ? correctOption.OptionLabel
+                                                    + ". "
+                                                    + correctOption.OptionText
+                                                : "Chưa có đáp án đúng")
+                                        </td>
+
+                                        <td>
+                                            <div class="question-action-buttons">
+
+                                                <a href="@Url.Action(
+        "EditQuestion",
+        "AdminQuestions",
+        new { id = question.QuestionId })"
+                                                   class="topic-edit-button">
+                                                    Sửa
+                                                </a>
+
+                                                @using (Html.BeginForm(
+                                                    "DeleteQuestion",
+                                                    "AdminQuestions",
+                                                    FormMethod.Post))
+                                                {
+                                                    @Html.AntiForgeryToken()
+
+                                                    <input type="hidden"
+                                                           name="questionId"
+                                                           value="@question.QuestionId" />
+
+                                                    <input type="hidden"
+                                                           name="quizId"
+                                                           value="@question.QuizId" />
+
+                                                    <button type="submit"
+                                                            class="topic-edit-button"
+                                                            onclick="return confirm('Bạn có chắc chắn muốn xóa câu hỏi này không?');">
+                                                        Xóa
+                                                    </button>
+                                                }
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="topic-empty">
+                                        Bài kiểm tra chưa có câu hỏi nào.
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+        </main>
+    </div>
+</body>
+</html>

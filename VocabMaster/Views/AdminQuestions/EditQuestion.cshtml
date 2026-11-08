@@ -1,0 +1,261 @@
+﻿
+@model VocabMaster.Models.QuestionCreateViewModel
+
+@{
+    ViewBag.Title = "Edit Question";
+    Layout = null;
+
+    var quiz = ViewBag.Quiz as VocabMaster.Models.Quizze;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Question - VocabMaster</title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/site.css?v=2")" />
+</head>
+
+<body>
+    <div class="admin-container">
+
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <h2>VocabMaster</h2>
+                <p>English Vocabulary Learning</p>
+            </div>
+
+            <div class="admin-workspace">
+                <span>ADMIN WORKSPACE</span>
+            </div>
+
+            <nav class="admin-navigation">
+                <a href="@Url.Action("Index", "Admin")">Dashboard</a>
+                <a href="@Url.Action("Index", "AdminTopics")">Topics Management</a>
+                <a href="@Url.Action("Index", "AdminVocabulary")">Vocabulary Management</a>
+                <a href="@Url.Action("Index", "AdminQuestions")" class="active">Quiz Management</a>
+                <a href="@Url.Action("Index", "AdminUsers")">Users</a>
+            </nav>
+
+            <div class="admin-sidebar-bottom">
+                <a href="@Url.Action("Index", "Home")">Trở về học tập</a>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+
+            <header class="admin-header">
+                <div>
+                    <h1>Question Management</h1>
+                    <p>Chỉnh sửa nội dung câu hỏi và các đáp án.</p>
+                </div>
+                <div class="admin-role">Administrator</div>
+            </header>
+
+            <section class="admin-welcome">
+                <h2>@(quiz != null ? quiz.QuizTitle : "Chỉnh sửa câu hỏi")</h2>
+                <p>
+                    Chủ đề:
+                    @(quiz != null && quiz.Topic != null
+                        ? quiz.Topic.TopicName
+                        : "Chưa phân chủ đề")
+                </p>
+            </section>
+
+            <section class="admin-content">
+
+                <div class="question-create-card">
+
+                    <div class="question-create-heading">
+                        <h2>Thông tin câu hỏi</h2>
+                        <p>
+                            Cập nhật nội dung câu hỏi, các phương án trả lời
+                            và lựa chọn đáp án chính xác.
+                        </p>
+                    </div>
+
+                    @using (Html.BeginForm(
+                        "EditQuestion",
+                        "AdminQuestions",
+                        FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.HiddenFor(m => m.QuestionId)
+                        @Html.HiddenFor(m => m.QuizId)
+
+                        <div class="question-form-grid">
+
+                            @Html.ValidationSummary(
+                                false,
+                                "",
+                                new { @class = "question-validation-summary" })
+
+                            <div class="question-field full-width">
+                                <label>
+                                    Nội dung câu hỏi <span>*</span>
+                                </label>
+
+                                @Html.TextAreaFor(m => m.QuestionText,
+                                    new
+                                    {
+                                        @class = "question-input",
+                                        placeholder = "Nhập nội dung câu hỏi...",
+                                        rows = "4"
+                                    })
+
+                                @Html.ValidationMessageFor(
+                                    m => m.QuestionText,
+                                    "",
+                                    new { @class = "question-form-error" })
+                            </div>
+
+                            <div class="question-options-heading">
+                                <h3>Các phương án trả lời</h3>
+                                <p>Chỉnh sửa nội dung của bốn đáp án bên dưới.</p>
+                            </div>
+
+                            <div class="question-field question-option-card">
+                                <label>
+                                    <span class="question-option-letter">A</span>
+                                    Đáp án A <span>*</span>
+                                </label>
+
+                                @Html.TextBoxFor(m => m.OptionA,
+                                    new
+                                    {
+                                        @class = "question-input",
+                                        placeholder = "Nhập đáp án A..."
+                                    })
+
+                                @Html.ValidationMessageFor(
+                                    m => m.OptionA,
+                                    "",
+                                    new { @class = "question-form-error" })
+                            </div>
+
+                            <div class="question-field question-option-card">
+                                <label>
+                                    <span class="question-option-letter">B</span>
+                                    Đáp án B <span>*</span>
+                                </label>
+
+                                @Html.TextBoxFor(m => m.OptionB,
+                                    new
+                                    {
+                                        @class = "question-input",
+                                        placeholder = "Nhập đáp án B..."
+                                    })
+
+                                @Html.ValidationMessageFor(
+                                    m => m.OptionB,
+                                    "",
+                                    new { @class = "question-form-error" })
+                            </div>
+
+                            <div class="question-field question-option-card">
+                                <label>
+                                    <span class="question-option-letter">C</span>
+                                    Đáp án C <span>*</span>
+                                </label>
+
+                                @Html.TextBoxFor(m => m.OptionC,
+                                    new
+                                    {
+                                        @class = "question-input",
+                                        placeholder = "Nhập đáp án C..."
+                                    })
+
+                                @Html.ValidationMessageFor(
+                                    m => m.OptionC,
+                                    "",
+                                    new { @class = "question-form-error" })
+                            </div>
+
+                            <div class="question-field question-option-card">
+                                <label>
+                                    <span class="question-option-letter">D</span>
+                                    Đáp án D <span>*</span>
+                                </label>
+
+                                @Html.TextBoxFor(m => m.OptionD,
+                                    new
+                                    {
+                                        @class = "question-input",
+                                        placeholder = "Nhập đáp án D..."
+                                    })
+
+                                @Html.ValidationMessageFor(
+                                    m => m.OptionD,
+                                    "",
+                                    new { @class = "question-form-error" })
+                            </div>
+
+                            <div class="question-field question-correct-field">
+                                <label>
+                                    Đáp án chính xác <span>*</span>
+                                </label>
+
+                                @Html.DropDownListFor(
+                                    m => m.CorrectOption,
+                                    new SelectList(
+                                        new[]
+                                        {
+                                            new { Value = "A", Text = "Đáp án A" },
+                                            new { Value = "B", Text = "Đáp án B" },
+                                            new { Value = "C", Text = "Đáp án C" },
+                                            new { Value = "D", Text = "Đáp án D" }
+                                        },
+                                        "Value",
+                                        "Text",
+                                        Model.CorrectOption
+                                    ),
+                                    new { @class = "question-input" })
+
+                                @Html.ValidationMessageFor(
+                                    m => m.CorrectOption,
+                                    "",
+                                    new { @class = "question-form-error" })
+                            </div>
+
+                            <div class="question-field full-width">
+                                <label>Giải thích đáp án</label>
+
+                                @Html.TextAreaFor(m => m.Explanation,
+                                    new
+                                    {
+                                        @class = "question-input",
+                                        placeholder = "Giải thích vì sao đáp án được chọn là chính xác...",
+                                        rows = "3"
+                                    })
+                            </div>
+
+                        </div>
+
+                        <div class="question-form-actions">
+
+                            <a href="@Url.Action(
+                                "Questions",
+                                "AdminQuestions",
+                                new { id = Model.QuizId })"
+                               class="question-cancel-button">
+                                Quay lại
+                            </a>
+
+                            <button type="submit"
+                                    class="question-save-button">
+                                Lưu thay đổi
+                            </button>
+
+                        </div>
+                    }
+
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+</body>
+</html>
