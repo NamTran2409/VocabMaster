@@ -1,0 +1,293 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LearningLayout.cshtml";
+    ViewBag.Title = "Flashcards";
+}
+
+<div class="breadcrumb">
+    Chủ đề / @ViewBag.TopicName / <b>Flashcards</b>
+</div>
+
+<div class="page-heading">
+    <div>
+        <div class="eyebrow">ACTIVE RECALL</div>
+        <h1>Flashcards · Mặt trước</h1>
+        <p>
+            Nhìn từ, nhớ nghĩa. Lật thẻ để kiểm tra trí nhớ của bạn.
+        </p>
+    </div>
+
+    <div class="pill">✦ @ViewBag.TopicName · 20 từ</div>
+</div>
+
+<div class="flash-top">
+    <div class="flash-progress">
+        <b id="positionText">Vị trí thẻ 5 trên 20</b>
+
+        <div class="progress-track">
+            <span id="progressFill"></span>
+        </div>
+    </div>
+
+    <div class="pill" id="learnedTotal">
+        Đã học trong chủ đề: 5/20
+    </div>
+</div>
+
+<div class="flash-stage">
+    <div class="flash-card"
+         id="flashCard"
+         role="button"
+         tabindex="0"
+         aria-label="Lật flashcard">
+
+        <div class="card-label" id="cardLabel">
+            ENGLISH WORD
+        </div>
+
+        <div class="flash-word" id="flashWord">
+            itinerary
+        </div>
+
+        <div class="phonetic" id="flashPhonetic">
+            /aɪˈtɪnərəri/
+        </div>
+
+        <div class="hint" id="flashHint">
+            Bạn có nhớ nghĩa của từ này không?
+        </div>
+
+        <div class="example-box" id="exampleBox" hidden>
+            <small>VÍ DỤ TRONG NGỮ CẢNH</small>
+
+            <p id="flashExample">
+                We planned our itinerary before the trip.
+            </p>
+
+            <p id="flashMeaningExample" style="margin-top: 7px">
+                Chúng tôi đã lên lịch trình trước chuyến đi.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="flash-actions">
+    <button class="btn secondary" id="previousBtn">
+        ← Previous
+    </button>
+
+    <button class="btn primary" id="flipBtn">
+        Flip
+    </button>
+
+    <button class="btn secondary" id="nextBtn">
+        Next →
+    </button>
+
+    <button class="btn learned-button" id="learnedBtn">
+        ✓ Mark as Learned
+    </button>
+
+    <button class="btn secondary" id="shuffleBtn">
+        ⤨ Xáo trộn
+    </button>
+</div>
+
+<p class="flash-tip" id="flashTip">
+    Hãy thử nói nghĩa và đặt một câu trước khi lật thẻ.
+    Ghi nhớ chủ động hiệu quả hơn đọc lại.
+</p>
+
+<a class="back-link" href="@Url.Action("VocabularyList", "Learning")">
+    ← Vocabulary List · Travel
+</a>
+
+@section scripts {
+    <script>
+        (function () {
+
+            const cards = [
+                [
+                    'destination',
+                    '/ˌdestɪˈneɪʃən/',
+                    'điểm đến',
+                    'Da Nang is a popular holiday destination.',
+                    'Đà Nẵng là một điểm đến nghỉ dưỡng nổi tiếng.'
+                ],
+                [
+                    'accommodation',
+                    '/əˌkɒməˈdeɪʃən/',
+                    'chỗ ở',
+                    'We booked accommodation near the city centre.',
+                    'Chúng tôi đã đặt chỗ ở gần trung tâm thành phố.'
+                ],
+                [
+                    'departure',
+                    '/dɪˈpɑːtʃə(r)/',
+                    'sự khởi hành',
+                    'Please arrive two hours before departure.',
+                    'Vui lòng đến trước giờ khởi hành hai tiếng.'
+                ],
+                [
+                    'luggage',
+                    '/ˈlʌɡɪdʒ/',
+                    'hành lý',
+                    'Keep your luggage with you at the station.',
+                    'Hãy giữ hành lý bên mình tại nhà ga.'
+                ],
+                [
+                    'itinerary',
+                    '/aɪˈtɪnərəri/',
+                    'lịch trình',
+                    'We planned our itinerary before the trip.',
+                    'Chúng tôi đã lên lịch trình trước chuyến đi.'
+                ],
+                [
+                    'passport',
+                    '/ˈpɑːspɔːt/',
+                    'hộ chiếu',
+                    'Remember to bring your passport to the airport.',
+                    'Nhớ mang hộ chiếu đến sân bay.'
+                ],
+                [
+                    'boarding pass',
+                    '/ˈbɔːdɪŋ pɑːs/',
+                    'thẻ lên máy bay',
+                    'Show your boarding pass at the gate.',
+                    'Hãy xuất trình thẻ lên máy bay tại cổng.'
+                ],
+                [
+                    'reservation',
+                    '/ˌrezəˈveɪʃən/',
+                    'sự đặt chỗ',
+                    'I made a reservation for a double room.',
+                    'Tôi đã đặt trước một phòng đôi.'
+                ],
+                [
+                    'journey',
+                    '/ˈdʒɜːni/',
+                    'chuyến đi',
+                    'The train journey took about three hours.',
+                    'Chuyến đi bằng tàu mất khoảng ba tiếng.'
+                ],
+                [
+                    'souvenir',
+                    '/ˌsuːvəˈnɪə(r)/',
+                    'quà lưu niệm',
+                    'She bought a souvenir for her sister.',
+                    'Cô ấy mua quà lưu niệm cho chị/em gái.'
+                ]
+            ];
+
+            let order = cards.map((_, i) => i);
+            let index = 4;
+            let flipped = false;
+            let learned = new Set([0, 1, 2, 3, 5]);
+
+            const $ = id => document.getElementById(id);
+
+            function render() {
+                let c = cards[order[index]];
+
+                $('positionText').textContent =
+                    'Vị trí thẻ ' + (index + 1) + ' trên ' + order.length;
+
+                $('progressFill').style.width =
+                    ((index + 1) / order.length * 100) + '%';
+
+                $('learnedTotal').textContent =
+                    'Đã học trong chủ đề: ' + learned.size + '/20';
+
+                $('cardLabel').textContent = flipped
+                    ? 'VIETNAMESE MEANING'
+                    : 'ENGLISH WORD';
+
+                $('flashWord').textContent = flipped
+                    ? c[2]
+                    : c[0];
+
+                $('flashPhonetic').textContent = flipped
+                    ? c[1] + ' • noun'
+                    : c[1];
+
+                $('flashHint').textContent = flipped
+                    ? ''
+                    : 'Bạn có nhớ nghĩa của từ này không?';
+
+                $('exampleBox').hidden = !flipped;
+
+                $('flashExample').textContent = c[3];
+                $('flashMeaningExample').textContent = c[4];
+
+                $('flipBtn').textContent = flipped
+                    ? 'Show Word'
+                    : 'Flip';
+
+                $('learnedBtn').textContent = learned.has(order[index])
+                    ? '✓ Đã đánh dấu đã học'
+                    : '✓ Mark as Learned';
+
+                $('previousBtn').disabled = index === 0;
+
+                $('nextBtn').disabled =
+                    index === order.length - 1;
+
+                $('flashTip').textContent = flipped
+                    ? 'Đã nhớ từ này? Chọn Mark as Learned để ghi nhận vào tiến độ chủ đề @ViewBag.TopicName.'
+                    : 'Hãy thử nói nghĩa và đặt một câu trước khi lật thẻ. Ghi nhớ chủ động hiệu quả hơn đọc lại.';
+            }
+
+            function flip() {
+                flipped = !flipped;
+                render();
+            }
+
+            $('flipBtn').onclick = flip;
+
+            $('flashCard').onclick = flip;
+
+            $('flashCard').onkeydown = e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    flip();
+                }
+            };
+
+            $('previousBtn').onclick = () => {
+                if (index > 0) {
+                    index--;
+                    flipped = false;
+                    render();
+                }
+            };
+
+            $('nextBtn').onclick = () => {
+                if (index < order.length - 1) {
+                    index++;
+                    flipped = false;
+                    render();
+                }
+            };
+
+            $('learnedBtn').onclick = () => {
+                learned.add(order[index]);
+                render();
+            };
+
+            $('shuffleBtn').onclick = () => {
+                for (let i = order.length - 1; i > 0; i--) {
+                    let j = Math.floor(Math.random() * (i + 1));
+
+                    [order[i], order[j]] = [order[j], order[i]];
+                }
+
+                index = 0;
+                flipped = false;
+                render();
+            };
+
+            render();
+
+        })();
+    </script>
+}

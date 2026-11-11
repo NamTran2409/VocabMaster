@@ -1,0 +1,32 @@
+﻿@model VocabMaster.ViewModels.DashboardViewModel
+
+@{
+    ViewBag.Title = "Tổng quan";
+    Layout = "~/Views/Shared/_LearningLayout.cshtml";
+}
+<section class="vm-hero">
+    <div><span class="vm-eyebrow">TỔNG QUAN HỌC TẬP</span><h1>Chào @Model.DisplayName 👋</h1><p>Mỗi ngày một chút, vốn từ của bạn sẽ tiến bộ rõ rệt.</p></div>
+    <a class="vm-primary" href="@Url.Action("Index", "Topics")">Khám phá chủ đề →</a>
+</section>
+<div class="vm-stats">
+    <div class="vm-stat"><span>🎯</span><div><b>@Model.LearnedToday/@Model.TodayGoal</b><small>Mục tiêu hôm nay</small></div></div>
+    <div class="vm-stat"><span>📚</span><div><b>@Model.TotalWords</b><small>Tổng từ vựng</small></div></div>
+    <div class="vm-stat"><span>✓</span><div><b>@Model.CompletedTopics</b><small>Chủ đề hoàn thành</small></div></div>
+    <div class="vm-stat"><span>🔥</span><div><b>@Model.StreakDays ngày</b><small>Chuỗi học tập</small></div></div>
+</div>
+<div class="vm-grid-2">
+    <section class="vm-panel">
+        <div class="vm-panel-head"><div><span class="vm-eyebrow">TIẾP TỤC</span><h2>Chủ đề đang học</h2></div><a href="@Url.Action("Index", "Topics", new { status = "learning" })">Xem tất cả</a></div>
+        @if (Model.CurrentTopics.Count == 0)
+        {<p class="vm-muted">Chưa có chủ đề đang học.</p>}
+        @foreach (var t in Model.CurrentTopics)
+        {<div class="vm-learning"><div class="vm-topic-icon">@t.TopicName.Substring(0, 1)</div><div class="vm-grow"><div class="vm-row"><strong>@t.TopicName</strong><span>@t.Progress%</span></div><div class="vm-progress"><i style="width:@t.Progress%"></i></div><small>@t.WordCount từ vựng</small></div></div>}
+    </section>
+    <section class="vm-panel"><span class="vm-eyebrow">HÔM NAY</span><h2>Từ vựng gợi ý</h2><div class="vm-word-list">@foreach (var w in Model.TodayWords)
+    {<span>@w</span>}</div><p class="vm-muted">Học đều mỗi ngày giúp ghi nhớ từ vựng lâu hơn.</p></section>
+</div>
+<section class="vm-panel vm-activity">
+    <div class="vm-panel-head"><div><span class="vm-eyebrow">NHẬT KÝ</span><h2>Hoạt động gần đây</h2></div></div>
+    @foreach (var a in Model.RecentActivities)
+    {<div class="vm-activity-item"><span>✓</span><p>@a</p><small>Gần đây</small></div>}
+</section>

@@ -1,0 +1,263 @@
+﻿
+@model VocabMaster.ViewModels.QuizViewModel
+
+@{
+    Layout = "~/Views/Shared/_LearningLayout.cshtml";
+    ViewBag.Title = "Kiểm tra từ vựng";
+    ViewBag.Active = "Quiz";
+}
+
+<div class="vm-quiz-page">
+
+    @if (!Model.IsTakingQuiz)
+    {
+        <!-- HEADER -->
+        <section class="vm-quiz-hero">
+            <div class="vm-quiz-hero-icon">✍️</div>
+            <div>
+                <span class="vm-quiz-eyebrow">LUYỆN TẬP & ĐÁNH GIÁ</span>
+                <h1>Kiểm tra từ vựng</h1>
+                <p>Chọn chủ đề yêu thích và thử thách vốn từ tiếng Anh của bạn.</p>
+            </div>
+        </section>
+
+        <!-- TOPIC LIST -->
+        <section class="vm-quiz-section">
+            <div class="vm-quiz-section-heading">
+                <div>
+                    <span class="vm-quiz-eyebrow">BẮT ĐẦU LUYỆN TẬP</span>
+                    <h2>Danh sách bài Quiz</h2>
+                    <p>Chọn một chủ đề để bắt đầu bài kiểm tra.</p>
+                </div>
+
+                <span class="vm-quiz-count">
+                    @(Model.Topics == null ? 0 : Model.Topics.Count) chủ đề
+                </span>
+            </div>
+
+            @if (Model.Topics != null && Model.Topics.Any())
+            {
+                <div class="vm-quiz-grid">
+
+                    @foreach (var topic in Model.Topics)
+                    {
+                        <article class="vm-quiz-topic-card">
+
+                            <div class="vm-quiz-topic-top">
+                                <span class="vm-quiz-topic-icon">📚</span>
+                                <span class="vm-quiz-status">Sẵn sàng</span>
+                            </div>
+
+                            <h3>@topic.TopicName</h3>
+
+                            <p class="vm-quiz-topic-description">
+                                Bài kiểm tra từ vựng thuộc chủ đề @topic.TopicName.
+                            </p>
+
+                            <div class="vm-quiz-topic-meta">
+                                <span>📖 @topic.WordCount từ vựng</span>
+                            </div>
+
+                            <a href="@Url.Action("Index", "Quiz", new { start = true, topicId = topic.TopicId })"
+                               class="vm-quiz-start-btn">
+                                Bắt đầu làm bài
+                                <span>→</span>
+                            </a>
+
+                        </article>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <div class="vm-quiz-empty">
+                    <span>📭</span>
+                    <h3>Chưa có chủ đề Quiz</h3>
+                    <p>Hiện tại chưa tìm thấy chủ đề nào để luyện tập.</p>
+                </div>
+            }
+
+        </section>
+
+        <!-- QUIZ HISTORY -->
+        <section class="vm-quiz-history">
+
+            <div class="vm-quiz-section-heading">
+                <div>
+                    <span class="vm-quiz-eyebrow">THEO DÕI KẾT QUẢ</span>
+                    <h2>Lịch sử làm bài</h2>
+                    <p>Xem lại kết quả những bài kiểm tra trước đây.</p>
+                </div>
+
+                <span class="vm-quiz-count">
+                    @(Model.History == null ? 0 : Model.History.Count) lượt làm
+                </span>
+            </div>
+
+            @if (Model.History == null || !Model.History.Any())
+            {
+                <div class="vm-quiz-empty vm-quiz-history-empty">
+                    <span>📝</span>
+                    <h3>Bạn chưa có lịch sử làm bài</h3>
+                    <p>Hoàn thành bài Quiz đầu tiên để xem kết quả tại đây nhé!</p>
+                </div>
+            }
+            else
+            {
+                <div class="vm-quiz-table-wrap">
+
+                    <table class="vm-quiz-table">
+                        <thead>
+                            <tr>
+                                <th>Bài kiểm tra</th>
+                                <th>Thời gian</th>
+                                <th>Kết quả</th>
+                                <th>Điểm số</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model.History)
+                            {
+                                <tr>
+                                    <td class="vm-quiz-table-title">
+                                        @item.QuizTitle
+                                    </td>
+
+                                    <td>
+                                        @item.CompletedAt.ToString("dd/MM/yyyy HH:mm")
+                                    </td>
+
+                                    <td>
+                                        @item.CorrectCount / @item.TotalQuestions câu đúng
+                                    </td>
+
+                                    <td>
+                                        <span class="vm-quiz-score @(item.ScorePercentage >= 50 ? "is-good" : "is-low")">
+                                            @item.ScorePercentage%
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            }
+
+        </section>
+    }
+    else
+    {
+        <!-- QUIZ INTRO -->
+        <section class="vm-quiz-hero vm-quiz-taking-hero">
+
+            <div class="vm-quiz-hero-icon">🧠</div>
+
+            <div>
+                <span class="vm-quiz-eyebrow">BÀI KIỂM TRA CỦA BẠN</span>
+                <h1>@Model.TopicTitle</h1>
+                <p>Đọc kỹ câu hỏi, chọn một đáp án cho mỗi câu rồi nộp bài.</p>
+            </div>
+
+        </section>
+
+        <!-- QUIZ INFORMATION -->
+        <div class="vm-quiz-progress-info">
+            <span>📝 Tổng số câu hỏi</span>
+            <strong>@Model.Questions.Count câu</strong>
+        </div>
+
+        <!-- QUIZ FORM -->
+        <form action="@Url.Action("Result", "Quiz")"
+              method="post"
+              class="vm-quiz-form">
+
+            @Html.Hidden("TopicId", Model.TopicId)
+            @Html.AntiForgeryToken()
+
+            @for (int i = 0; i < Model.Questions.Count; i++)
+            {
+                var question = Model.Questions[i];
+
+                <section class="vm-quiz-question-card">
+
+                    <div class="vm-quiz-question-heading">
+                        <span class="vm-quiz-question-number">
+                            Câu @(i + 1)
+                        </span>
+
+                        <span class="vm-quiz-question-label">
+                            Chọn một đáp án
+                        </span>
+                    </div>
+
+                    <h3>@question.QuestionText</h3>
+
+                    <div class="vm-quiz-word-info">
+                        <span>Từ vựng:</span>
+
+                        <strong>@question.Word</strong>
+
+                        @if (!String.IsNullOrWhiteSpace(question.Phonetic))
+                        {
+                            <span class="vm-quiz-phonetic">
+                                @question.Phonetic
+                            </span>
+                        }
+                    </div>
+
+                    <div class="vm-quiz-options">
+
+                        @for (int j = 0; j < question.Options.Count; j++)
+                        {
+                            var optionId = "q_" + question.Id + "_" + j;
+
+                            <label class="vm-quiz-option" for="@optionId">
+
+                                <input type="radio"
+                                       id="@optionId"
+                                       name="q_@question.Id"
+                                       value="@j" />
+
+                                <span class="vm-quiz-option-letter">
+                                    @((char)('A' + j))
+                                </span>
+
+                                <span class="vm-quiz-option-text">
+                                    @question.Options[j]
+                                </span>
+
+                                <span class="vm-quiz-option-check">
+                                    ✓
+                                </span>
+
+                            </label>
+                        }
+
+                    </div>
+
+                </section>
+            }
+
+            <!-- SUBMIT -->
+            <div class="vm-quiz-submit-area">
+
+                <button type="submit" class="vm-quiz-submit-btn">
+                    Nộp bài kiểm tra
+                    <span>→</span>
+                </button>
+
+                <a href="@Url.Action("Index", "Quiz")"
+                   class="vm-quiz-exit-btn">
+                    Thoát bài làm
+                </a>
+
+            </div>
+
+        </form>
+    }
+
+</div>
+B

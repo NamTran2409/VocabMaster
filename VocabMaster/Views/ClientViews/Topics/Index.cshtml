@@ -1,0 +1,32 @@
+﻿@model List<VocabMaster.ViewModels.TopicCardViewModel>
+
+@{
+    Layout = "~/Views/Shared/_LearningLayout.cshtml";
+    ViewBag.Title = "Khám phá chủ đề";
+    ViewBag.Active = "Topics";
+
+    var status = (string)ViewBag.Status ?? "all";
+}
+<section class="vm-hero vm-topic-hero"><div><span class="vm-eyebrow">THƯ VIỆN TỪ VỰNG</span><h1>Khám phá chủ đề</h1><p>Chọn một chủ đề phù hợp và tiếp tục hành trình mở rộng vốn từ.</p></div></section>
+<form method="get" class="vm-toolbar">
+    <div class="vm-search"><span>⌕</span><input type="text" name="q" value="@ViewBag.Query" placeholder="Tìm kiếm chủ đề..." /></div>
+    <div class="vm-filters">
+        <button name="status" value="all" class="@(status == "all" ? "active" : "")">Tất cả</button>
+        <button name="status" value="learning" class="@(status == "learning" ? "active" : "")">Đang học</button>
+        <button name="status" value="completed" class="@(status == "completed" ? "active" : "")">Hoàn thành</button>
+    </div>
+</form>
+<div class="vm-result-line"><strong>@Model.Count</strong> chủ đề phù hợp</div>
+<div class="vm-topic-grid">
+    @foreach (var t in Model)
+    {
+        <article class="vm-topic-card">
+            <div class="vm-topic-top"><div class="vm-topic-icon big">@t.TopicName.Substring(0, 1)</div><span class="vm-badge @t.Status">@t.StatusText</span></div>
+            <h3>@t.TopicName</h3><p>@t.WordCount từ vựng trong chủ đề</p>
+            <div class="vm-row"><small>Tiến độ</small><strong>@t.Progress%</strong></div><div class="vm-progress"><i style="width:@t.Progress%"></i></div>
+            <a class="vm-card-action" href="@Url.Action("VocabularyList", "Learning", new { topicId = t.TopicId, topicName = t.TopicName })">@(t.Progress == 0 ? "Bắt đầu học" : (t.Progress >= 100 ? "Ôn tập lại" : "Tiếp tục học")) →</a>
+        </article>
+    }
+</div>
+@if (Model.Count == 0)
+{<div class="vm-empty"><b>Không tìm thấy chủ đề</b><p>Thử từ khóa hoặc bộ lọc khác nhé.</p></div>}

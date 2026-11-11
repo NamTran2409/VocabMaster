@@ -1,0 +1,85 @@
+﻿@{
+    Layout = "~/Views/Shared/_LearningLayout.cshtml";
+    ViewBag.Title = "Kết quả Quiz";
+    ViewBag.Active = "Quiz";
+}
+
+<div class="container my-4">
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body text-center py-5 bg-light rounded">
+            <h1 class="display-4 font-weight-bold text-primary">Kết Quả Bài Làm</h1>
+            <p class="lead text-secondary">@Model.TopicTitle</p>
+            <hr class="w-25 my-3">
+            <h3 class="mb-3">
+                Số câu đúng: <span class="text-success font-weight-bold">@Model.CorrectCount</span> / @Model.TotalQuestions
+            </h3>
+            <h4 class="text-info font-weight-bold">
+                Tỷ lệ chính xác: @Model.ScorePercentage%
+            </h4>
+            <div class="mt-4">
+                <a href="@Url.Action("Index", "Quiz")" class="btn btn-primary px-4 mr-2">Về trang Quiz & lịch sử</a>
+                <a href="@Url.Action("Index", "Dashboard")" class="btn btn-outline-secondary px-4">Về Trang Chủ</a>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mb-3">Chi Tiết Đáp Án & Giải Thích:</h3>
+
+    @{
+        int index = 0;
+    }
+    @foreach (var item in Model.Details)
+    {
+        index++;
+        <div class="card mb-3 border-@(item.IsCorrect ? "success" : "danger") shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="card-title mb-0 font-weight-bold">
+                        Câu @index: @item.QuestionText
+                    </h5>
+                    @if (item.IsCorrect)
+                    {
+                        <span class="badge badge-success p-2">Đúng ✓</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger p-2">Sai ✗</span>
+                    }
+                </div>
+
+                <p class="text-muted mb-2">Từ vựng: <strong>@item.Word</strong> (@item.Phonetic)</p>
+
+                <ul class="list-group mb-3">
+                    @for (int j = 0; j < item.Options.Count; j++)
+                    {
+                        string badgeClass = "";
+                        if (j == item.CorrectAnswer)
+                        {
+                            badgeClass = "list-group-item-success font-weight-bold";
+                        }
+                        else if (j == item.UserAnswer && !item.IsCorrect)
+                        {
+                            badgeClass = "list-group-item-danger font-weight-bold";
+                        }
+
+                        <li class="list-group-item @badgeClass">
+                            @((char)('A' + j)). @item.Options[j]
+                            @if (j == item.CorrectAnswer)
+                            {
+                                <span>(Đáp án đúng)</span>
+                            }
+                            else if (j == item.UserAnswer && !item.IsCorrect)
+                            {
+                                <span>(Bạn đã chọn)</span>
+                            }
+                        </li>
+                    }
+                </ul>
+
+                <div class="alert alert-secondary mb-0">
+                    <strong>Giải thích:</strong> @item.Explanation <br />
+                    <strong>Ví dụ:</strong> <em>@item.Example</em>
+                </div>
+            </div>
+        </div>
+    }

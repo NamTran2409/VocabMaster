@@ -1,0 +1,44 @@
+﻿@{
+    Layout = "~/Views/Account/_AuthLayout.cshtml";
+    ViewBag.Title = "Tạo tài khoản";
+}
+<div class="auth-shell">
+    <aside class="auth-brand">
+        <a class="brand" href="@Url.Action("Index","Home")"><span class="brand-mark">V</span><span>VocabMaster<small>English Vocabulary Learning</small></span></a>
+        <div class="brand-copy">
+            <span class="eyebrow">YOUR NEXT CHAPTER</span>
+            <h1>Từng từ mới.<br />Thêm một cơ hội.</h1>
+            <p>Một không gian học từ vựng dành cho sinh viên: học theo chủ đề, ghi nhớ bằng flashcards và tự tin qua từng bài quiz.</p>
+            <div class="study-art" aria-hidden="true"><span class="book">▤</span><span class="globe">◎</span><span class="paper">➤</span></div>
+            <div class="stats"><div><b>12</b><span>Chủ đề gần gũi</span></div><div><b>600</b><span>Từ vựng thực tế</span></div><div><b>3</b><span>Cách học linh hoạt</span></div></div>
+        </div>
+        <p class="brand-foot">Học theo nhịp của bạn. Tiến bộ mỗi ngày.</p>
+    </aside>
+    <main class="auth-main">
+        <div class="top-link">Đã có tài khoản? <a href="@Url.Action("Login")">Đăng nhập →</a></div>
+        <section class="auth-card register-card">
+            <span class="eyebrow">BẮT ĐẦU CHƯƠNG MỚI</span>
+            <h2>Tạo tài khoản</h2>
+            <p class="muted">Xây dựng vốn từ cho việc học và cuộc sống đại học.</p>
+            @if (ViewBag.Error != null) { <div class="alert error">@ViewBag.Error</div> }
+            <button class="google-btn" type="button" onclick="alert('Đăng ký Google chưa được cấu hình trong bản demo.')">◎ &nbsp; Đăng ký với Google</button>
+            <div class="separator"><span>hoặc đăng ký bằng email</span></div>
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "auth-form" }))
+            {
+                @Html.AntiForgeryToken()
+                <label for="fullName">Họ và tên</label>
+                <input id="fullName" name="fullName" autocomplete="name" placeholder="Nguyễn Minh Anh" value="@ViewBag.FullName" required />
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" placeholder="minhanh@example.com" value="@ViewBag.Email" required />
+                <label for="password">Mật khẩu</label>
+                <input id="password" name="password" type="password" autocomplete="new-password" placeholder="Ít nhất 8 ký tự, gồm chữ và số" minlength="8" required />
+                <label for="confirmPassword">Xác nhận mật khẩu</label>
+                <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Nhập lại mật khẩu" required />
+                <label class="check terms"><input type="checkbox" name="agreeTerms" value="true" required /> Tôi đồng ý với Điều khoản sử dụng và Chính sách bảo mật của VocabMaster.</label>
+                <button class="primary-btn" type="submit">→ &nbsp; Tạo tài khoản học viên</button>
+            }
+            <p class="bottom-link">Đã có tài khoản? <a href="@Url.Action("Login")">Đăng nhập</a></p>
+        </section>
+        <footer>© 2026 VocabMaster • English Vocabulary Learning</footer>
+    </main>
+</div>

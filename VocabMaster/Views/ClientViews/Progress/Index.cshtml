@@ -1,0 +1,66 @@
+﻿@model VocabMaster.ViewModels.MyProgressViewModel
+@{
+    Layout = "~/Views/Shared/_LearningLayout.cshtml";
+    ViewBag.Title = "My Progress";
+    ViewBag.Active = "Progress";
+    int percent = Model.TotalWords == 0 ? 0 : (int)Math.Round(Model.LearnedWords * 100.0 / Model.TotalWords);
+}
+<div class="breadcrumb">Learning space / <b>My Progress</b></div>
+<div class="page-heading">
+    <div><div class="eyebrow">YOUR LEARNING JOURNEY</div><h1>My Progress</h1><p>Mỗi từ bạn ghi nhớ đều là một bước tiến. Đây là hành trình của bạn.</p></div>
+    <div class="pill">📈 Thống kê học tập</div>
+</div>
+
+<div class="mp-stat-grid">
+    <div class="mp-stat"><span>Từ vựng đã học</span><strong>@Model.LearnedWords</strong><small>trên @Model.TotalWords từ • @percent%</small></div>
+    <div class="mp-stat"><span>Chủ đề hoàn thành</span><strong>@Model.CompletedTopics / @Model.TotalTopics</strong><small>Thống kê từ các bài Quiz đã hoàn thành</small></div>
+    <div class="mp-stat"><span>Điểm quiz trung bình</span><strong>@Model.AverageScore%</strong><small>Qua @Model.QuizCount bài kiểm tra</small></div>
+</div>
+
+<div class="mp-grid">
+    <section class="mp-panel">
+        <div class="mp-panel-head"><div><div class="eyebrow">OVERALL PROGRESS</div><h2>Tiến độ tổng thể</h2></div><b>@percent%</b></div>
+        <div class="mp-progress-track"><span style="width:@percent%"></span></div>
+        <div class="mp-legend"><span>● @Model.LearnedWords đã học</span><span>● @(Model.TotalWords - Model.LearnedWords) chưa học</span></div>
+        <div class="mp-ring-wrap"><div class="mp-ring" style="--progress:@percent"><div><b>@percent%</b><small>@Model.TotalWords từ trong danh mục</small></div></div></div>
+        <div class="mp-note">@Model.CompletedTopics chủ đề hoàn thành • @(Model.TotalTopics - Model.CompletedTopics) chủ đề đang chờ bạn khám phá</div>
+    </section>
+
+    <section class="mp-panel">
+        <div class="mp-panel-head"><div><div class="eyebrow">LAST 7 DAYS</div><h2>Nhịp học của bạn</h2></div><span class="pill">@(Model.Days.First().Day) – @(Model.Days.Last().Day)</span></div>
+        <div class="mp-week-total"><b>@Model.LearnedLast7Days</b><span>từ mới trong 7 ngày</span></div>
+        <div class="mp-chart">
+            @foreach (var day in Model.Days)
+            {
+                <div class="mp-chart-col"><b>@day.Learned</b><div class="mp-bar-area"><i style="height:@(day.Learned * 10)%"></i></div><small>@day.Day</small></div>
+            }
+        </div>
+        <div class="mp-note">Hôm nay: @Model.LearnedToday từ mới • Mục tiêu: @Model.DailyGoal từ/ngày</div>
+        <div class="mp-note">Số từ đã học sẽ được cập nhật khi chức năng ghi nhận hoàn thành từ vựng được kết nối.</div>
+    </section>
+</div>
+
+<section class="mp-panel mp-topic-panel">
+    <div class="mp-panel-head"><div><div class="eyebrow">TOPIC BREAKDOWN</div><h2>Tiến độ theo chủ đề</h2></div></div>
+    <div class="mp-topic-list">
+        @foreach (var topic in Model.Topics)
+        {
+            <div class="mp-topic-row">
+                <div><b>@topic.TopicName</b><small>@topic.StatusText</small></div>
+                <div class="mp-topic-track"><i style="width:@topic.Progress%"></i></div>
+                <strong>@topic.Progress%</strong>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="mp-panel">
+    <div class="mp-panel-head"><div><div class="eyebrow">QUIZ HISTORY</div><h2>Lịch sử kiểm tra</h2></div><span class="pill">@Model.QuizCount bài · TB @Model.AverageScore%</span></div>
+    <div class="mp-table-wrap"><table class="mp-table"><thead><tr><th>Chủ đề</th><th>Điểm (đúng/tổng)</th><th>Ngày làm</th></tr></thead><tbody>
+    @foreach (var quiz in Model.QuizHistory)
+    {
+        <tr><td><b>@quiz.Topic</b></td><td><span class="mp-score">@quiz.Correct/@quiz.Total</span></td><td>@quiz.Date</td></tr>
+    }
+    </tbody></table></div>
+    <p class="mp-note">Điểm và ngày làm được lấy từ lịch sử Quiz trong phiên đăng nhập hiện tại.</p>
+</section>

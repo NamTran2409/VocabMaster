@@ -1,0 +1,413 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LearningLayout.cshtml";
+    ViewBag.Title = "Vocabulary List";
+}
+
+<div class="breadcrumb">
+    Chủ đề / @ViewBag.TopicName / <b>Danh sách từ vựng</b>
+</div>
+
+<div class="page-heading">
+    <div>
+        <div class="eyebrow">YOUR LEARNING SPACE</div>
+        <h1>@ViewBag.TopicName · Từ vựng</h1>
+        <p>Những từ cần thiết cho chuyến đi tiếp theo của bạn.</p>
+    </div>
+
+    <div class="pill">✦ @ViewBag.TopicName · 20 từ</div>
+</div>
+
+<div class="summary-strip">
+    <div>
+        <strong>Sẵn sàng khám phá thế giới</strong>
+        <p>Học từ, nghe phát âm và ghi nhớ qua ví dụ.</p>
+    </div>
+
+    <div class="summary-stats">
+        <div class="stat">
+            <strong id="learnedCount">5 / 20</strong>
+            <small>Từ đã học</small>
+        </div>
+
+        <div class="stat">
+            <strong id="learnedPercent">25%</strong>
+            <small>Tiến độ chủ đề</small>
+        </div>
+
+        <div class="stat">
+            <strong>10 câu</strong>
+            <small>Quiz · Travel</small>
+        </div>
+    </div>
+</div>
+
+<div class="toolbar">
+    <label class="search-box">
+        ⌕
+        <input id="wordSearch"
+               type="search"
+               placeholder="Tìm từ tiếng Anh hoặc nghĩa tiếng Việt..." />
+    </label>
+
+    <div class="filter-tabs" id="filterTabs">
+        <button class="active" data-filter="all">
+            Tất cả (20)
+        </button>
+
+        <button data-filter="learned">
+            Đã học (5)
+        </button>
+
+        <button data-filter="new">
+            Chưa học (15)
+        </button>
+    </div>
+</div>
+
+<div class="table-card">
+    <div class="table-title">
+        <b>Từ vựng trong chủ đề</b>
+        <span id="resultCount">20 từ vựng</span>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>TỪ VỰNG / PHIÊN ÂM</th>
+                <th>NGHĨA TIẾNG VIỆT</th>
+                <th>VÍ DỤ</th>
+                <th>TRẠNG THÁI</th>
+            </tr>
+        </thead>
+
+        <tbody id="vocabRows"></tbody>
+    </table>
+
+    <div class="table-footer">
+        <span id="tableSummary">
+            Hiển thị 1–10 / 20 từ vựng
+        </span>
+
+        <div class="pagination">
+            <button id="prevPage">Previous</button>
+            <button class="current" id="pageNum">1</button>
+            <button id="nextPage">Next</button>
+        </div>
+    </div>
+</div>
+
+<a class="back-link"
+   href="@Url.Action("Flashcards", "Learning", new { topicId = ViewBag.TopicId, topicName = ViewBag.TopicName })">
+    Ôn tập bằng Flashcards →
+</a>
+
+@section scripts {
+    <script>
+        (function () {
+
+            const words = [
+                [
+                    'destination',
+                    '/ˌdestɪˈneɪʃən/ • noun',
+                    'điểm đến',
+                    'Da Nang is a popular holiday destination.',
+                    true
+                ],
+                [
+                    'accommodation',
+                    '/əˌkɒməˈdeɪʃən/ • noun',
+                    'chỗ ở',
+                    'We booked accommodation near the city centre.',
+                    true
+                ],
+                [
+                    'departure',
+                    '/dɪˈpɑːtʃə(r)/ • noun',
+                    'sự khởi hành',
+                    'Please arrive two hours before departure.',
+                    true
+                ],
+                [
+                    'luggage',
+                    '/ˈlʌɡɪdʒ/ • noun',
+                    'hành lý',
+                    'Keep your luggage with you at the station.',
+                    true
+                ],
+                [
+                    'itinerary',
+                    '/aɪˈtɪnərəri/ • noun',
+                    'lịch trình',
+                    'We planned our itinerary before the trip.',
+                    false
+                ],
+                [
+                    'passport',
+                    '/ˈpɑːspɔːt/ • noun',
+                    'hộ chiếu',
+                    'Remember to bring your passport to the airport.',
+                    true
+                ],
+                [
+                    'boarding pass',
+                    '/ˈbɔːdɪŋ pɑːs/ • noun',
+                    'thẻ lên máy bay',
+                    'Show your boarding pass at the gate.',
+                    false
+                ],
+                [
+                    'reservation',
+                    '/ˌrezəˈveɪʃən/ • noun',
+                    'sự đặt chỗ',
+                    'I made a reservation for a double room.',
+                    false
+                ],
+                [
+                    'journey',
+                    '/ˈdʒɜːni/ • noun',
+                    'chuyến đi',
+                    'The train journey took about three hours.',
+                    false
+                ],
+                [
+                    'souvenir',
+                    '/ˌsuːvəˈnɪə(r)/ • noun',
+                    'quà lưu niệm',
+                    'She bought a souvenir for her sister.',
+                    false
+                ],
+                [
+                    'airport',
+                    '/ˈeəpɔːt/ • noun',
+                    'sân bay',
+                    'We arrived at the airport early.',
+                    false
+                ],
+                [
+                    'lounge',
+                    '/laʊndʒ/ • noun',
+                    'phòng chờ',
+                    'They waited in the airport lounge.',
+                    false
+                ],
+                [
+                    'customs',
+                    '/ˈkʌstəmz/ • noun',
+                    'hải quan',
+                    'Our bags were checked at customs.',
+                    false
+                ],
+                [
+                    'tourist',
+                    '/ˈtʊərɪst/ • noun',
+                    'khách du lịch',
+                    'The town attracts many tourists.',
+                    false
+                ],
+                [
+                    'sightseeing',
+                    '/ˈsaɪtˌsiːɪŋ/ • noun',
+                    'tham quan',
+                    'We went sightseeing around the old town.',
+                    false
+                ],
+                [
+                    'departure gate',
+                    '/dɪˈpɑːtʃə ɡeɪt/ • noun',
+                    'cổng khởi hành',
+                    'Please go to the departure gate.',
+                    false
+                ],
+                [
+                    'currency',
+                    '/ˈkʌrənsi/ • noun',
+                    'tiền tệ',
+                    'I exchanged some currency before the trip.',
+                    false
+                ],
+                [
+                    'guidebook',
+                    '/ˈɡaɪdbʊk/ • noun',
+                    'sách hướng dẫn du lịch',
+                    'The guidebook has a useful city map.',
+                    false
+                ],
+                [
+                    'reservation desk',
+                    '/ˌrezəˈveɪʃən desk/ • noun',
+                    'quầy đặt chỗ',
+                    'Ask at the reservation desk for help.',
+                    false
+                ],
+                [
+                    'one-way ticket',
+                    '/ˌwʌn weɪ ˈtɪkɪt/ • noun',
+                    'vé một chiều',
+                    'I bought a one-way ticket to Da Nang.',
+                    false
+                ]
+            ];
+
+            let filter = 'all';
+            let page = 1;
+
+            const perPage = 10;
+            const body = document.getElementById('vocabRows');
+
+            function render() {
+
+                const q = document
+                    .getElementById('wordSearch')
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+                const list = words.filter(w =>
+                    (
+                        filter === 'all' ||
+                        (filter === 'learned' ? w[4] : !w[4])
+                    ) &&
+                    w.slice(0, 4)
+                        .join(' ')
+                        .toLowerCase()
+                        .includes(q)
+                );
+
+                const pages = Math.max(
+                    1,
+                    Math.ceil(list.length / perPage)
+                );
+
+                page = Math.min(page, pages);
+
+                body.innerHTML = '';
+
+                list
+                    .slice(
+                        (page - 1) * perPage,
+                        page * perPage
+                    )
+                    .forEach(w => {
+
+                        const tr = document.createElement('tr');
+
+                        tr.innerHTML = `
+                                <td class="word">
+                                    <b></b>
+                                    <small></small>
+                                </td>
+                                <td class="meaning"></td>
+                                <td class="example"></td>
+                                <td>
+                                    <span class="status"></span>
+                                </td>
+                            `;
+
+                        tr.querySelector('.word b').textContent = w[0];
+
+                        tr.querySelector('.word small').textContent = w[1];
+
+                        tr.querySelector('.meaning').textContent = w[2];
+
+                        tr.querySelector('.example').textContent = w[3];
+
+                        const s = tr.querySelector('.status');
+
+                        s.textContent = w[4]
+                            ? '✓ Đã học'
+                            : 'Chưa học';
+
+                        if (!w[4]) {
+                            s.classList.add('unlearned');
+                        }
+
+                        body.appendChild(tr);
+                    });
+
+                document.getElementById('resultCount').textContent =
+                    list.length + ' kết quả phù hợp';
+
+                document.getElementById('tableSummary').textContent =
+                    list.length
+                        ? 'Hiển thị ' +
+                        ((page - 1) * perPage + 1) +
+                        '–' +
+                        Math.min(page * perPage, list.length) +
+                        ' / ' +
+                        list.length +
+                        ' từ vựng'
+                        : 'Không tìm thấy từ phù hợp';
+
+                document.getElementById('pageNum').textContent = page;
+
+                document.getElementById('prevPage').disabled =
+                    page === 1;
+
+                document.getElementById('nextPage').disabled =
+                    page === pages;
+
+                document
+                    .querySelectorAll('#filterTabs button')
+                    .forEach(b => {
+                        b.classList.toggle(
+                            'active',
+                            b.dataset.filter === filter
+                        );
+                    });
+            }
+
+            document
+                .getElementById('wordSearch')
+                .addEventListener('input', () => {
+                    page = 1;
+                    render();
+                });
+
+            document
+                .getElementById('filterTabs')
+                .addEventListener('click', e => {
+
+                    if (e.target.dataset.filter) {
+                        filter = e.target.dataset.filter;
+                        page = 1;
+                        render();
+                    }
+                });
+
+            document.getElementById('prevPage').onclick = () => {
+                if (page > 1) {
+                    page--;
+                    render();
+                }
+            };
+
+            document.getElementById('nextPage').onclick = () => {
+                const q = document
+                    .getElementById('wordSearch')
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+                const list = words.filter(w =>
+                    (
+                        filter === 'all' ||
+                        (filter === 'learned' ? w[4] : !w[4])
+                    ) &&
+                    w.slice(0, 4)
+                        .join(' ')
+                        .toLowerCase()
+                        .includes(q)
+                );
+
+                if (page < Math.ceil(list.length / perPage)) {
+                    page++;
+                    render();
+                }
+            };
+
+            render();
+
+        })();
+    </script>
+}

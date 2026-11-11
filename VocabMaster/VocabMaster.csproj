@@ -129,15 +129,25 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\AdminQuestionsController.cs" />
-    <Compile Include="Controllers\AdminTopicsController.cs" />
-    <Compile Include="Controllers\AdminUsersController.cs" />
-    <Compile Include="Controllers\AdminVocabularyController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\Admin\AdminController.cs" />
+    <Compile Include="Controllers\Admin\AdminQuestionsController.cs" />
+    <Compile Include="Controllers\Admin\AdminTopicsController.cs" />
+    <Compile Include="Controllers\Admin\AdminUsersController.cs" />
+    <Compile Include="Controllers\Admin\AdminVocabularyController.cs" />
+    <Compile Include="Controllers\Admin\HomeController.cs" />
+    <Compile Include="Controllers\Client\AccountController.cs" />
+    <Compile Include="Controllers\Client\DashboardController.cs" />
+    <Compile Include="Controllers\Client\LearningController.cs" />
+    <Compile Include="Controllers\Client\LearningData.cs" />
+    <Compile Include="Controllers\Client\ProfileController.cs" />
+    <Compile Include="Controllers\Client\ProgressController.cs" />
+    <Compile Include="Controllers\Client\QuizController.cs" />
+    <Compile Include="Controllers\Client\TopicsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ClientModel\LearningViewModels.cs" />
+    <Compile Include="Models\ClientModel\QuizViewModel.cs" />
     <Compile Include="Models\ExternalLogin.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -159,7 +169,7 @@
     <Compile Include="Models\Question.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\QuestionCreateViewModel.cs" />
+    <Compile Include="Models\AdminModel\QuestionCreateViewModel.cs" />
     <Compile Include="Models\QuestionOption.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -190,10 +200,11 @@
     <Compile Include="Models\Vocabulary.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\VocabularyCreateViewModel.cs" />
+    <Compile Include="Models\AdminModel\VocabularyCreateViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\auth.css" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -210,6 +221,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\Learning.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -261,24 +273,37 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\AdminTopics\Index.cshtml" />
-    <Content Include="Views\AdminTopics\Create.cshtml" />
-    <Content Include="Views\AdminTopics\Edit.cshtml" />
-    <Content Include="Views\AdminVocabulary\Index.cshtml" />
-    <Content Include="Views\AdminVocabulary\Create.cshtml" />
-    <Content Include="Views\AdminVocabulary\Edit.cshtml" />
-    <Content Include="Views\AdminQuestions\Index.cshtml" />
-    <Content Include="Views\AdminQuestions\Create.cshtml" />
-    <Content Include="Views\AdminQuestions\Questions.cshtml" />
-    <Content Include="Views\AdminQuestions\CreateQuestion.cshtml" />
-    <Content Include="Views\AdminQuestions\EditQuestion.cshtml" />
-    <Content Include="Views\AdminUsers\Index.cshtml" />
-    <Content Include="Views\AdminUsers\Details.cshtml" />
+    <Content Include="Views\AdminViews\Admin\Index.cshtml" />
+    <Content Include="Views\AdminViews\AdminTopics\Index.cshtml" />
+    <Content Include="Views\AdminViews\AdminTopics\Create.cshtml" />
+    <Content Include="Views\AdminViews\AdminTopics\Edit.cshtml" />
+    <Content Include="Views\AdminViews\AdminVocabulary\Index.cshtml" />
+    <Content Include="Views\AdminViews\AdminVocabulary\Create.cshtml" />
+    <Content Include="Views\AdminViews\AdminVocabulary\Edit.cshtml" />
+    <Content Include="Views\AdminViews\AdminQuestions\Index.cshtml" />
+    <Content Include="Views\AdminViews\AdminQuestions\Create.cshtml" />
+    <Content Include="Views\AdminViews\AdminQuestions\Questions.cshtml" />
+    <Content Include="Views\AdminViews\AdminQuestions\CreateQuestion.cshtml" />
+    <Content Include="Views\AdminViews\AdminQuestions\EditQuestion.cshtml" />
+    <Content Include="Views\AdminViews\AdminUsers\Index.cshtml" />
+    <Content Include="Views\AdminViews\AdminUsers\Details.cshtml" />
+    <Content Include="Views\ClientViews\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\ClientViews\Account\Login.cshtml" />
+    <Content Include="Views\ClientViews\Account\Register.cshtml" />
+    <Content Include="Views\ClientViews\Account\ResetPassword.cshtml" />
+    <Content Include="Views\ClientViews\Account\_AuthLayout.cshtml" />
+    <Content Include="Views\ClientViews\Dashboard\Index.cshtml" />
+    <Content Include="Views\ClientViews\Learning\Flashcards.cshtml" />
+    <Content Include="Views\ClientViews\Learning\VocabularyList.cshtml" />
+    <Content Include="Views\ClientViews\Profile\Index.cshtml" />
+    <Content Include="Views\ClientViews\Progress\Index.cshtml" />
+    <Content Include="Views\ClientViews\Quiz\Index.cshtml" />
+    <Content Include="Views\ClientViews\Quiz\Result.cshtml" />
+    <Content Include="Views\ClientViews\Shared\_LearningLayout.cshtml" />
+    <Content Include="Views\ClientViews\Topics\Index.cshtml" />
+    <Content Include="Views\Shared\_LearningLayout.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
     <Content Include="Content\bootstrap.rtl.css.map" />

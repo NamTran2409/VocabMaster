@@ -1,0 +1,44 @@
+﻿@{
+    Layout = null;
+    var pageTitle = ViewBag.Title ?? "Learning Space";
+    var displayName = Convert.ToString(Session["FullName"] ?? Session["UserEmail"] ?? "Học viên");
+    var initials = string.IsNullOrWhiteSpace(displayName) ? "HV" : displayName.Substring(0, 1).ToUpperInvariant();
+    var avatarUrl = Convert.ToString(Session["AvatarUrl"]);
+    var dailyGoal = Convert.ToInt32(Session["DailyGoal"] ?? 10);
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@pageTitle - VocabMaster</title>
+    <link href="@Url.Content("~/Content/Learning.css")" rel="stylesheet" />
+</head>
+<body class="learning-body">
+<div class="app-shell">
+    <aside class="sidebar">
+        <a class="brand" href="@Url.Action("Index", "Dashboard")"><span class="brand-mark">V</span><span><b>VocabMaster</b><small>English Vocabulary Learning</small></span></a>
+        <div class="side-caption">LEARNING SPACE</div>
+        <nav class="side-nav">
+            <a href="@Url.Action("Index", "Dashboard")"><span>▦</span>Tổng quan</a>
+            <a href="@Url.Action("Index", "Topics")"><span>▤</span>Chủ đề</a>
+            <a class="@(ViewBag.Active == "VocabularyList" ? "active" : "")" href="@Url.Action("VocabularyList", "Learning", new { topicId = ViewBag.TopicId, topicName = ViewBag.TopicName })"><span>☷</span>Từ vựng</a>
+            <a class="@(ViewBag.Active == "Flashcards" ? "active" : "")" href="@Url.Action("Flashcards", "Learning", new { topicId = ViewBag.TopicId, topicName = ViewBag.TopicName })"><span>▣</span>Flashcards</a>
+            <a href="@Url.Action("Index", "Quiz")">
+                <span>✓</span>Quiz
+            </a>
+            <a class="@(ViewBag.Active == "Progress" ? "active" : "")" href="@Url.Action("Index", "Progress")"><span>▥</span>My Progress</a>
+            <a class="@(ViewBag.Active == "Profile" ? "active" : "")" href="@Url.Action("Index", "Profile")"><span>◉</span>Profile</a>
+        </nav>
+        <div class="daily-card"><div class="daily-icon">✦</div><b>Mỗi ngày một bước nhỏ</b><p>Mục tiêu hôm nay: @dailyGoal từ mới.</p><p>Bạn đã học được 5 từ!</p><div class="daily-progress"><span></span></div><small>5 / @dailyGoal từ hôm nay</small></div>
+        <div class="user-mini"><div class="avatar">@if (!String.IsNullOrWhiteSpace(avatarUrl)) { <img src="@Url.Content(avatarUrl)" alt="Avatar" /> } else { @initials }</div><div><b>@displayName</b><small>Tài khoản học viên</small></div></div>
+    </aside>
+    <main class="main-area">
+        <header class="topbar"><div class="global-search">⌕ <span>Tìm chủ đề, từ vựng...</span><kbd>⌘ K</kbd></div><div class="top-user"><span>@DateTime.Now.ToString("dd/MM/yyyy")</span><div class="avatar small">@if (!String.IsNullOrWhiteSpace(avatarUrl)) { <img src="@Url.Content(avatarUrl)" alt="Avatar" /> } else { @initials }</div></div></header>
+        <section class="page-content">@RenderBody()</section>
+        <footer class="page-footer">@displayName <span>VocabMaster • Học từng từ, mở thêm cơ hội.</span></footer>
+    </main>
+</div>
+@RenderSection("scripts", required: false)
+</body>
+</html>

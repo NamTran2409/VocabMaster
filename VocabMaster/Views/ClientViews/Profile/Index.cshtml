@@ -1,0 +1,84 @@
+﻿@model VocabMaster.ViewModels.ProfileViewModel
+@{
+    Layout = "~/Views/Shared/_LearningLayout.cshtml";
+    ViewBag.Title = "Profile";
+    ViewBag.Active = "Profile";
+    string initials = String.IsNullOrWhiteSpace(Model.FullName) ? "HV" : Model.FullName.Substring(0,1).ToUpperInvariant();
+}
+<div class="breadcrumb">Learning space / <b>Profile</b></div>
+<div class="page-heading"><div><div class="eyebrow">YOUR ACCOUNT</div><h1>Profile</h1><p>Thông tin cá nhân và thói quen học tập, theo cách của bạn.</p></div></div>
+
+@if (!String.IsNullOrWhiteSpace(Model.Message) || TempData["ProfileMessage"] != null)
+{ <div class="mp-alert success">@((Model.Message ?? Convert.ToString(TempData["ProfileMessage"])))</div> }
+@if (!String.IsNullOrWhiteSpace(Model.Error) || TempData["ProfileError"] != null)
+{ <div class="mp-alert error">@(Model.Error ?? Convert.ToString(TempData["ProfileError"]))</div> }
+
+<div class="profile-hero">
+    <div class="profile-avatar">
+        @if (!String.IsNullOrWhiteSpace(Model.AvatarUrl)) { <img src="@Url.Content(Model.AvatarUrl)" alt="Ảnh đại diện" /> }
+        else { <span>@initials</span> }
+    </div>
+    <div class="profile-identity"><h2>@Model.FullName</h2><p>@Model.Email</p><span>@Model.Role · Học viên</span></div>
+    @using (Html.BeginForm("UploadAvatar", "Profile", FormMethod.Post, new { enctype = "multipart/form-data", @class = "avatar-form" }))
+    {
+        @Html.AntiForgeryToken()
+        <label for="avatarFile" class="btn secondary">Đổi ảnh đại diện</label>
+        <input id="avatarFile" type="file" name="avatar" accept=".jpg,.jpeg,.png,.webp" onchange="this.form.submit()" />
+        <small>JPG, PNG hoặc WebP • Tối đa 2 MB</small>
+    }
+</div>
+
+<div class="profile-columns">
+    <section class="mp-panel">
+        <div class="mp-panel-head"><div><div class="eyebrow">PERSONAL INFORMATION</div><h2>Thông tin cá nhân</h2></div></div>
+        @using (Html.BeginForm("Save", "Profile", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <label class="profile-label">Họ và tên</label>
+            @Html.TextBoxFor(m => m.FullName, new { @class = "profile-input", placeholder = "Nhập họ và tên" })
+            @Html.HiddenFor(m => m.DailyGoal)
+            @Html.HiddenFor(m => m.ReminderTime)
+            @Html.HiddenFor(m => m.EmailReminder)
+            @Html.HiddenFor(m => m.PronunciationSound)
+            <label class="profile-label">Email</label>
+            <input class="profile-input" value="@Model.Email" readonly />
+            <label class="profile-label">Vai trò</label>
+            <input class="profile-input" value="@Model.Role" readonly />
+            <div class="profile-readonly-note">Email và vai trò được quản lý theo tài khoản đăng nhập.</div>
+            <button type="submit" class="btn primary">Lưu thay đổi</button>
+        }
+    </section>
+
+    <section class="mp-panel">
+        <div class="mp-panel-head"><div><div class="eyebrow">LEARNING PREFERENCES</div><h2>Thói quen học tập</h2></div></div>
+        @using (Html.BeginForm("Save", "Profile", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.FullName)
+            <label class="profile-label">Mục tiêu mỗi ngày (từ mới)</label>
+            @Html.TextBoxFor(m => m.DailyGoal, new { @class = "profile-input", type = "number", min = "1", max = "100" })
+            <label class="profile-label">Giờ nhắc học</label>
+            @Html.TextBoxFor(m => m.ReminderTime, new { @class = "profile-input", type = "time" })
+            <label class="profile-check">@Html.CheckBoxFor(m => m.EmailReminder) Nhắc học qua email</label>
+            <label class="profile-check">@Html.CheckBoxFor(m => m.PronunciationSound) Âm thanh phát âm</label>
+            <button type="submit" class="btn primary">Lưu thói quen</button>
+        }
+    </section>
+</div>
+
+<section class="mp-panel password-panel">
+    <div class="mp-panel-head"><div><div class="eyebrow">ACCOUNT SECURITY</div><h2>Đổi mật khẩu</h2></div></div>
+    @if (TempData["PasswordMessage"] != null) { <div class="mp-alert success">@TempData["PasswordMessage"]</div> }
+    @if (TempData["PasswordError"] != null) { <div class="mp-alert error">@TempData["PasswordError"]</div> }
+    @using (Html.BeginForm("ChangePassword", "Profile", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="password-grid">
+            <div><label class="profile-label">Mật khẩu hiện tại</label><input class="profile-input" type="password" name="currentPassword" required /></div>
+            <div><label class="profile-label">Mật khẩu mới</label><input class="profile-input" type="password" name="newPassword" minlength="8" required /></div>
+            <div><label class="profile-label">Xác nhận mật khẩu mới</label><input class="profile-input" type="password" name="confirmPassword" minlength="8" required /></div>
+        </div>
+        <p class="profile-readonly-note">Mật khẩu mới cần ít nhất 8 ký tự, gồm chữ và số.</p>
+        <button type="submit" class="btn primary">Cập nhật mật khẩu</button>
+    }
+</section>
