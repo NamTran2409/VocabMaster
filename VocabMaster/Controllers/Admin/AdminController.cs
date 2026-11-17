@@ -16,7 +16,7 @@ namespace VocabMaster.Controllers
                 ViewBag.UserCount = db.Users.Count();
             }
 
-            return View();
+            return View("~/Views/AdminViews/Admin/Index.cshtml");
         }
     }
 }

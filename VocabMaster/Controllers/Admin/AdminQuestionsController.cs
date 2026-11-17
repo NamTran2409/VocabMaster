@@ -46,7 +46,7 @@ namespace VocabMaster.Controllers
                 ViewBag.SearchString = searchString;
                 ViewBag.SelectedTopicId = topicId;
 
-                return View(quizList);
+                return View("~/Views/AdminViews/AdminQuestions/Index.cshtml", quizList);
             }
         }
 
@@ -73,7 +73,7 @@ namespace VocabMaster.Controllers
                     .ToList();
 
                 ViewBag.Quiz = quiz;
-                return View(questions);
+                return View("~/Views/AdminViews/AdminQuestions/Questions.cshtml", questions);
             }
         }
 
@@ -102,7 +102,7 @@ namespace VocabMaster.Controllers
                     CorrectOption = "A"
                 };
 
-                return View(model);
+                return View("~/Views/AdminViews/AdminQuestions/CreateQuestion.cshtml", model);
             }
         }
 
@@ -202,8 +202,7 @@ namespace VocabMaster.Controllers
             TempData["SuccessMessage"] =
                 "Thêm câu hỏi và 4 đáp án thành công!";
 
-            return RedirectToAction(
-                "Questions", new { id = model.QuizId });
+            return View("~/Views/AdminViews/AdminQuestions/CreateQuestion.cshtml", model);
         }
 
         // ==========================================
@@ -251,7 +250,7 @@ namespace VocabMaster.Controllers
 
                 ViewBag.Quiz = quiz;
 
-                return View(model);
+                return View("~/Views/AdminViews/AdminQuestions/EditQuestion.cshtml", model);
             }
         }
 
@@ -358,8 +357,7 @@ namespace VocabMaster.Controllers
             TempData["SuccessMessage"] =
                 "Cập nhật câu hỏi thành công!";
 
-            return RedirectToAction(
-                "Questions", new { id = model.QuizId });
+            return View("~/Views/AdminViews/AdminQuestions/EditQuestion.cshtml", model);
         }
 
 
@@ -447,7 +445,7 @@ namespace VocabMaster.Controllers
         public ActionResult Create()
         {
             LoadTopics();
-            return View();
+            return View("~/Views/AdminViews/AdminQuestions/Create.cshtml");
         }
 
         // ==========================================
@@ -525,7 +523,7 @@ namespace VocabMaster.Controllers
             TempData["SuccessMessage"] =
                 "Thêm bài kiểm tra thành công!";
 
-            return RedirectToAction("Index");
+            return View("~/Views/AdminViews/AdminQuestions/Create.cshtml", quiz);
         }
 
         // ==========================================

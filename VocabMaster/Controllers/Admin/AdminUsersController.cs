@@ -16,7 +16,7 @@ namespace VocabMaster.Controllers
             {
                 var users = db.Users.AsQueryable();
 
-                // Tìm kiếm người dùng
+                // Tim kiem nguoi dung
                 if (!string.IsNullOrWhiteSpace(searchString))
                 {
                     searchString = searchString.Trim();
@@ -27,13 +27,13 @@ namespace VocabMaster.Controllers
                         u.DisplayName.Contains(searchString));
                 }
 
-                // Lọc theo vai trò
+                // Loc theo vai tro
                 if (!string.IsNullOrWhiteSpace(role))
                 {
                     users = users.Where(u => u.Role == role);
                 }
 
-                // Lọc theo trạng thái
+                // Loc theo trang thai
                 if (status == "active")
                 {
                     users = users.Where(u => u.IsActive);
@@ -55,7 +55,10 @@ namespace VocabMaster.Controllers
                 ViewBag.ActiveUsers = db.Users.Count(u => u.IsActive);
                 ViewBag.LockedUsers = db.Users.Count(u => !u.IsActive);
 
-                return View(result);
+                return View(
+                    "~/Views/AdminViews/AdminUsers/Index.cshtml",
+                    result
+                );
             }
         }
 
@@ -74,7 +77,10 @@ namespace VocabMaster.Controllers
                     return HttpNotFound();
                 }
 
-                return View(user);
+                return View(
+                    "~/Views/AdminViews/AdminUsers/Details.cshtml",
+                    user
+                );
             }
         }
 
@@ -92,11 +98,12 @@ namespace VocabMaster.Controllers
                     return HttpNotFound();
                 }
 
-                // Không cho khóa tài khoản Admin
+                // Khong cho khoa tai khoan Admin
                 if (user.Role == "Admin")
                 {
                     TempData["ErrorMessage"] =
                         "Không thể khóa tài khoản quản trị viên.";
+
                     return RedirectToAction("Index");
                 }
 

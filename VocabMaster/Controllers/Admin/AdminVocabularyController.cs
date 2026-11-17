@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using VocabMaster.Models;
+using VocabMaster.ViewModels;
 
 namespace VocabMaster.Controllers
 {
@@ -48,7 +49,10 @@ namespace VocabMaster.Controllers
                 ViewBag.SearchString = searchString;
                 ViewBag.SelectedTopicId = topicId;
 
-                return View(vocabularyList);
+                return View(
+                    "~/Views/AdminViews/AdminVocabulary/Index.cshtml",
+                    vocabularyList
+                );
             }
         }
 
@@ -63,7 +67,10 @@ namespace VocabMaster.Controllers
                     .OrderBy(t => t.TopicName)
                     .ToList();
 
-                return View(new VocabularyCreateViewModel());
+                return View(
+                    "~/Views/AdminViews/AdminVocabulary/Create.cshtml",
+                    new VocabularyCreateViewModel()
+                );
             }
         }
 
@@ -94,7 +101,10 @@ namespace VocabMaster.Controllers
                         .OrderBy(t => t.TopicName)
                         .ToList();
 
-                    return View(model);
+                    return View(
+                        "~/Views/AdminViews/AdminVocabulary/Create.cshtml",
+                        model
+                    );
                 }
 
                 string imageUrl = SaveUploadedFile(
@@ -158,7 +168,10 @@ namespace VocabMaster.Controllers
                     CurrentAudioUrl = vocabulary.AudioUrl
                 };
 
-                return View(model);
+                return View(
+                    "~/Views/AdminViews/AdminVocabulary/Edit.cshtml",
+                    model
+                );
             }
         }
 
@@ -196,7 +209,10 @@ namespace VocabMaster.Controllers
                     model.CurrentImageUrl = vocabulary.ImageUrl;
                     model.CurrentAudioUrl = vocabulary.AudioUrl;
 
-                    return View(model);
+                    return View(
+                        "~/Views/AdminViews/AdminVocabulary/Edit.cshtml",
+                        model
+                    );
                 }
 
                 string oldImageUrl = vocabulary.ImageUrl;

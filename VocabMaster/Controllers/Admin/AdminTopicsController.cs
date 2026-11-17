@@ -32,7 +32,10 @@ namespace VocabMaster.Controllers
 
                 ViewBag.SearchString = searchString;
 
-                return View(topicList);
+                return View(
+                    "~/Views/AdminViews/AdminTopics/Index.cshtml",
+                    topicList
+                );
             }
         }
 
@@ -46,7 +49,10 @@ namespace VocabMaster.Controllers
                 Status = "Published"
             };
 
-            return View(topic);
+            return View(
+                "~/Views/AdminViews/AdminTopics/Create.cshtml",
+                topic
+            );
         }
 
         // LƯU CHỦ ĐỀ MỚI
@@ -79,7 +85,10 @@ namespace VocabMaster.Controllers
                             "Tên chủ đề này đã tồn tại. Vui lòng nhập tên khác."
                         );
 
-                        return View(topic);
+                        return View(
+                            "~/Views/AdminViews/AdminTopics/Create.cshtml",
+                            topic
+                        );
                     }
 
                     topic.CreatedAt = DateTime.Now;
@@ -97,7 +106,10 @@ namespace VocabMaster.Controllers
                             "Tên chủ đề đã tồn tại hoặc dữ liệu không hợp lệ."
                         );
 
-                        return View(topic);
+                        return View(
+                            "~/Views/AdminViews/AdminTopics/Create.cshtml",
+                            topic
+                        );
                     }
                 }
 
@@ -107,7 +119,10 @@ namespace VocabMaster.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(topic);
+            return View(
+                "~/Views/AdminViews/AdminTopics/Create.cshtml",
+                topic
+            );
         }
 
         // HIỂN THỊ FORM SỬA CHỦ ĐỀ
@@ -123,7 +138,10 @@ namespace VocabMaster.Controllers
                     return HttpNotFound();
                 }
 
-                return View(topic);
+                return View(
+                    "~/Views/AdminViews/AdminTopics/Edit.cshtml",
+                    topic
+                );
             }
         }
 
@@ -165,10 +183,13 @@ namespace VocabMaster.Controllers
                             "Tên chủ đề này đã được sử dụng."
                         );
 
-                        return View(topic);
+                        return View(
+                            "~/Views/AdminViews/AdminTopics/Edit.cshtml",
+                            topic
+                        );
                     }
 
-                    // Cập nhật thông tin chủ đề
+                    // CẬP NHẬT THÔNG TIN CHỦ ĐỀ
                     existingTopic.TopicName = topic.TopicName;
                     existingTopic.Description = topic.Description;
                     existingTopic.IconUrl = topic.IconUrl;
@@ -186,7 +207,10 @@ namespace VocabMaster.Controllers
                             "Không thể cập nhật. Vui lòng kiểm tra lại dữ liệu."
                         );
 
-                        return View(topic);
+                        return View(
+                            "~/Views/AdminViews/AdminTopics/Edit.cshtml",
+                            topic
+                        );
                     }
                 }
 
@@ -196,9 +220,13 @@ namespace VocabMaster.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(topic);
+            return View(
+                "~/Views/AdminViews/AdminTopics/Edit.cshtml",
+                topic
+            );
         }
 
+        // XÓA CHỦ ĐỀ
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id)
@@ -212,7 +240,7 @@ namespace VocabMaster.Controllers
                     return HttpNotFound();
                 }
 
-                // Kiểm tra chủ đề có từ vựng hoặc bài kiểm tra không
+                // KIỂM TRA CHỦ ĐỀ CÓ TỪ VỰNG HOẶC BÀI KIỂM TRA KHÔNG
                 bool hasVocabularies = topic.Vocabularies.Any();
                 bool hasQuizzes = topic.Quizzes.Any();
 
@@ -228,7 +256,8 @@ namespace VocabMaster.Controllers
                 db.SaveChanges();
             }
 
-            TempData["SuccessMessage"] = "Xóa chủ đề thành công!";
+            TempData["SuccessMessage"] =
+                "Xóa chủ đề thành công!";
 
             return RedirectToAction("Index");
         }
