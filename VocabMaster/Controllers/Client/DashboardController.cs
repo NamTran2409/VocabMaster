@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿
+using System.Linq;
 using System.Web.Mvc;
 using VocabMaster.ViewModels;
 
@@ -11,8 +12,11 @@ namespace VocabMaster.Controllers
             var topics = LearningData.GetTopics();
             var email = Session["UserEmail"] as string;
             var name = Session["FullName"] as string;
+
             if (string.IsNullOrWhiteSpace(name))
-                name = !string.IsNullOrWhiteSpace(email) ? email.Split('@')[0] : "Bạn";
+                name = !string.IsNullOrWhiteSpace(email)
+                    ? email.Split('@')[0]
+                    : "Bạn";
 
             var model = new DashboardViewModel
             {
@@ -22,7 +26,9 @@ namespace VocabMaster.Controllers
                 TotalWords = topics.Sum(x => x.WordCount),
                 CompletedTopics = topics.Count(x => x.Progress >= 100),
                 StreakDays = 7,
-                CurrentTopics = topics.Where(x => x.Progress > 0 && x.Progress < 100).Take(3).ToList(),
+                CurrentTopics = topics
+                    .Where(x => x.Progress > 0 && x.Progress < 100)
+                    .Take(3).ToList(),
                 TodayWords = LearningData.GetTodayWords(),
                 RecentActivities = new System.Collections.Generic.List<string>
                 {
@@ -31,6 +37,7 @@ namespace VocabMaster.Controllers
                     "Hoàn thành mục tiêu hôm nay để tăng tiến độ."
                 }
             };
+
             return View("~/Views/ClientViews/Dashboard/Index.cshtml", model);
         }
     }

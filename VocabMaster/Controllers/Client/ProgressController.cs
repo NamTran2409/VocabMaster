@@ -82,7 +82,7 @@ namespace VocabMaster.Controllers
                 QuizHistory = history
             };
 
-            return View(model);
+            return View("~/Views/ClientViews/Progress/Index.cshtml", model);
         }
     }
 }

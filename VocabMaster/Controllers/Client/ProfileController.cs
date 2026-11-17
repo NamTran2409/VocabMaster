@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using VocabMaster.ViewModels;
@@ -31,8 +32,10 @@ namespace VocabMaster.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            if (Session["UserEmail"] == null) return RedirectToAction("Login", "Account");
-            return View(BuildModel());
+            if (Session["UserEmail"] == null)
+                return RedirectToAction("Login", "Account");
+
+            return View("~/Views/ClientViews/Profile/Index.cshtml", BuildModel());
         }
 
         [HttpPost]
@@ -64,7 +67,7 @@ namespace VocabMaster.Controllers
             Session["EmailReminder"] = model.EmailReminder;
             Session["PronunciationSound"] = model.PronunciationSound;
             model.Message = "Đã lưu thông tin cá nhân và thói quen học tập.";
-            return View("Index", model);
+            return View("~/Views/ClientViews/Profile/Index.cshtml", model);
         }
 
         [HttpPost]
@@ -99,27 +102,83 @@ namespace VocabMaster.Controllers
             return RedirectToAction("Index");
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ChangePassword(string currentPassword, string newPassword, string confirmPassword)
+        public ActionResult ChangePassword(
+            string currentPassword,
+            string newPassword,
+            string confirmPassword)
         {
-            if (Session["UserEmail"] == null) return RedirectToAction("Login", "Account");
+            if (Session["UserEmail"] == null)
+                return RedirectToAction("Login", "Account");
+
             string email = Convert.ToString(Session["UserEmail"]);
-            string savedPassword;
-            if (!AccountController.DemoUsers.TryGetValue(email, out savedPassword) || savedPassword != currentPassword)
-                TempData["PasswordError"] = "Mật khẩu hiện tại chưa chính xác.";
-            else if (String.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 8 ||
-                     !System.Linq.Enumerable.Any(newPassword, Char.IsLetter) ||
-                     !System.Linq.Enumerable.Any(newPassword, Char.IsDigit))
-                TempData["PasswordError"] = "Mật khẩu mới cần ít nhất 8 ký tự, gồm chữ và số.";
-            else if (newPassword != confirmPassword)
-                TempData["PasswordError"] = "Mật khẩu xác nhận không khớp.";
-            else
+
+            if (String.IsNullOrWhiteSpace(currentPassword))
             {
-                AccountController.DemoUsers[email] = newPassword;
-                TempData["PasswordMessage"] = "Đổi mật khẩu thành công.";
+                TempData["PasswordError"] = "Vui lòng nhập mật khẩu hiện tại.";
+                return RedirectToAction("Index");
             }
+
+            if (String.IsNullOrWhiteSpace(newPassword) ||
+                newPassword.Length < 8 ||
+                !System.Linq.Enumerable.Any(newPassword, Char.IsLetter) ||
+                !System.Linq.Enumerable.Any(newPassword, Char.IsDigit))
+            {
+                TempData["PasswordError"] =
+                    "Mật khẩu mới cần ít nhất 8 ký tự, gồm chữ và số.";
+                return RedirectToAction("Index");
+            }
+
+            if (String.IsNullOrEmpty(confirmPassword) ||
+                newPassword != confirmPassword)
+            {
+                TempData["PasswordError"] =
+                    "Mật khẩu xác nhận không khớp.";
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                using (var db = new VocabMaster.Models.VocabMasterDBEntities())
+                {
+                    var user = db.Users.FirstOrDefault(
+                        x => x.Email == email
+                    );
+
+                    if (user == null || !user.IsActive)
+                    {
+                        TempData["PasswordError"] =
+                            "Không tìm thấy tài khoản hợp lệ.";
+                        return RedirectToAction("Index");
+                    }
+
+                    if (!VocabMaster.Helpers.PasswordHasher.VerifyPassword(
+                        currentPassword, user.PasswordHash))
+                    {
+                        TempData["PasswordError"] =
+                            "Mật khẩu hiện tại chưa chính xác.";
+                        return RedirectToAction("Index");
+                    }
+
+                    user.PasswordHash =
+                        VocabMaster.Helpers.PasswordHasher.HashPassword(newPassword);
+
+                    db.SaveChanges();
+
+                    TempData["PasswordMessage"] =
+                        "Đổi mật khẩu thành công.";
+                }
+            }
+            catch (Exception)
+            {
+                TempData["PasswordError"] =
+                    "Không thể cập nhật mật khẩu. Vui lòng thử lại.";
+            }
+
             return RedirectToAction("Index");
         }
+
     }
 }
