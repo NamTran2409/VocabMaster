@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "~/Views/Account/_AuthLayout.cshtml";
+    Layout = "~/Views/ClientViews/Account/_AuthLayout.cshtml";
     ViewBag.Title = "Tạo tài khoản";
 }
 <div class="auth-shell">
@@ -20,7 +20,8 @@
             <span class="eyebrow">BẮT ĐẦU CHƯƠNG MỚI</span>
             <h2>Tạo tài khoản</h2>
             <p class="muted">Xây dựng vốn từ cho việc học và cuộc sống đại học.</p>
-            @if (ViewBag.Error != null) { <div class="alert error">@ViewBag.Error</div> }
+            @if (ViewBag.Error != null)
+            {<div class="alert error">@ViewBag.Error</div>}
             <button class="google-btn" type="button" onclick="alert('Đăng ký Google chưa được cấu hình trong bản demo.')">◎ &nbsp; Đăng ký với Google</button>
             <div class="separator"><span>hoặc đăng ký bằng email</span></div>
             @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "auth-form" }))
