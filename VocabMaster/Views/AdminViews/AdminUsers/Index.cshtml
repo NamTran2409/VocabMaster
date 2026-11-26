@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Users Management - VocabMaster</title>
 
-    <link rel="stylesheet" href="@Url.Content("~/Content/site.css?v=3")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/site.css?v=12")" />
 </head>
 <body>
 
@@ -67,8 +67,31 @@
                     <h1>Users Management</h1>
                 </div>
 
-                <div class="admin-user-info">
-                    <span>Administrator</span>
+                <!-- ADMIN ACCOUNT DROPDOWN -->
+                <div class="admin-account-dropdown">
+                    <button type="button"
+                            class="admin-role"
+                            id="adminAccountToggle"
+                            aria-expanded="false">
+                        <span class="admin-avatar">A</span>
+                        <span>Administrator</span>
+                        <span class="admin-arrow">&#9662;</span>
+                    </button>
+
+                    <div class="admin-account-menu" id="adminAccountMenu">
+                        <div class="admin-account-info">
+                            <strong>Administrator</strong>
+                            <span>Quản trị hệ thống</span>
+                        </div>
+
+                        <div class="admin-account-divider"></div>
+
+                        <a href="@Url.Action("Logout", "Account")"
+                           class="admin-logout">
+                            <span class="admin-logout-icon">&#10140;</span>
+                            <span>Đăng xuất</span>
+                        </a>
+                    </div>
                 </div>
             </header>
 
@@ -188,7 +211,7 @@
                         </div>
 
                         <span class="user-result-count">
-                            @Model.Count() người dùng
+                            @(Model == null ? 0 : Model.Count()) người dùng
                         </span>
                     </div>
 
@@ -230,16 +253,16 @@
                                                         else
                                                         {
                                                             @(string.IsNullOrWhiteSpace(user.DisplayName)
-                                                            ? "?"
-                                                            : user.DisplayName.Substring(0, 1).ToUpper())
+                                                                ? "?"
+                                                                : user.DisplayName.Substring(0, 1).ToUpper())
                                                         }
                                                     </div>
 
                                                     <div>
                                                         <div class="user-display-name">
                                                             @(string.IsNullOrWhiteSpace(user.DisplayName)
-                                                            ? user.Username
-                                                            : user.DisplayName)
+                                                                ? user.Username
+                                                                : user.DisplayName)
                                                         </div>
 
                                                         <div class="user-username">
@@ -263,8 +286,8 @@
 
                                             <td>
                                                 @(user.LastLoginAt.HasValue
-                                                ? user.LastLoginAt.Value.ToString("dd/MM/yyyy HH:mm")
-                                                : "Chưa đăng nhập")
+                                                    ? user.LastLoginAt.Value.ToString("dd/MM/yyyy HH:mm")
+                                                    : "Chưa đăng nhập")
                                             </td>
 
                                             <td>
@@ -286,9 +309,9 @@
                                                 <div class="user-action-buttons">
 
                                                     <a href="@Url.Action(
-                                                    "Details",
-                                                    "AdminUsers",
-                                                    new { id = user.UserId })"
+                                                        "Details",
+                                                        "AdminUsers",
+                                                        new { id = user.UserId })"
                                                        class="user-detail-button">
                                                         Chi tiết
                                                     </a>
@@ -343,6 +366,39 @@
         </main>
 
     </div>
+
+    <!-- ADMIN ACCOUNT DROPDOWN SCRIPT -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var toggle = document.getElementById("adminAccountToggle");
+            var menu = document.getElementById("adminAccountMenu");
+
+            if (!toggle || !menu) return;
+
+            toggle.addEventListener("click", function (e) {
+                e.stopPropagation();
+
+                var isOpen = menu.classList.toggle("show");
+                toggle.setAttribute("aria-expanded", isOpen);
+            });
+
+            menu.addEventListener("click", function (e) {
+                e.stopPropagation();
+            });
+
+            document.addEventListener("click", function () {
+                menu.classList.remove("show");
+                toggle.setAttribute("aria-expanded", "false");
+            });
+
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape") {
+                    menu.classList.remove("show");
+                    toggle.setAttribute("aria-expanded", "false");
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>

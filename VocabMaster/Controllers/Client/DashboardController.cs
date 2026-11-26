@@ -1,7 +1,7 @@
-﻿
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using VocabMaster.ViewModels;
+using System.Collections.Generic;
 
 namespace VocabMaster.Controllers
 {
@@ -10,35 +10,51 @@ namespace VocabMaster.Controllers
         public ActionResult Index()
         {
             var topics = LearningData.GetTopics();
+
             var email = Session["UserEmail"] as string;
             var name = Session["FullName"] as string;
 
             if (string.IsNullOrWhiteSpace(name))
+            {
                 name = !string.IsNullOrWhiteSpace(email)
                     ? email.Split('@')[0]
                     : "Bạn";
+            }
 
             var model = new DashboardViewModel
             {
+                // TÊN HỌC VIÊN
                 DisplayName = name,
-                TodayGoal = 20,
-                LearnedToday = 8,
+
+                // MỤC TIÊU HỌC HÔM NAY
+                TodayGoal = 10,
+
+                // TÀI KHOẢN MỚI CHƯA HỌC
+                LearnedToday = 0,
+
+                // TỔNG SỐ TỪ VỰNG CÓ TRONG HỆ THỐNG
                 TotalWords = topics.Sum(x => x.WordCount),
-                CompletedTopics = topics.Count(x => x.Progress >= 100),
-                StreakDays = 7,
-                CurrentTopics = topics
-                    .Where(x => x.Progress > 0 && x.Progress < 100)
-                    .Take(3).ToList(),
+
+                // CHƯA HOÀN THÀNH CHỦ ĐỀ NÀO
+                CompletedTopics = 0,
+
+                // CHƯA CÓ CHUỖI NGÀY HỌC
+                StreakDays = 0,
+
+                // CHƯA CÓ CHỦ ĐỀ ĐANG HỌC
+                CurrentTopics = new List<TopicCardViewModel>(),
+
+                // TỪ VỰNG GỢI Ý HÔM NAY
                 TodayWords = LearningData.GetTodayWords(),
-                RecentActivities = new System.Collections.Generic.List<string>
-                {
-                    "Bạn đã ôn tập flashcard gần đây.",
-                    "Tiếp tục chủ đề đang học để giữ chuỗi ngày.",
-                    "Hoàn thành mục tiêu hôm nay để tăng tiến độ."
-                }
+
+                // CHƯA CÓ HOẠT ĐỘNG GẦN ĐÂY
+                RecentActivities = new List<string>()
             };
 
-            return View("~/Views/ClientViews/Dashboard/Index.cshtml", model);
+            return View(
+                "~/Views/ClientViews/Dashboard/Index.cshtml",
+                model
+            );
         }
     }
 }

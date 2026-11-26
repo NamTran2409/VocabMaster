@@ -12,7 +12,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quiz Management - VocabMaster</title>
-    <link rel="stylesheet" href="@Url.Content("~/Content/site.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/site.css?v=12")" />
 </head>
 
 <body>
@@ -48,7 +48,32 @@
                     <h1>Quiz Management</h1>
                     <p>Quản lý các bài kiểm tra trong hệ thống.</p>
                 </div>
-                <div class="admin-role">Administrator</div>
+
+                <!-- ADMIN ACCOUNT DROPDOWN -->
+                <div class="admin-account-dropdown">
+                    <button type="button"
+                            class="admin-role"
+                            id="adminAccountToggle"
+                            aria-expanded="false">
+                        <span class="admin-avatar">A</span>
+                        <span>Administrator</span>
+                        <span class="admin-arrow">&#9662;</span>
+                    </button>
+
+                    <div class="admin-account-menu" id="adminAccountMenu">
+                        <div class="admin-account-info">
+                            <strong>Administrator</strong>
+                            <span>Quản trị hệ thống</span>
+                        </div>
+
+                        <div class="admin-account-divider"></div>
+
+                        <a href="@Url.Action("Logout", "Account")" class="admin-logout">
+                            <span class="admin-logout-icon">&#10140;</span>
+                            <span>Đăng xuất</span>
+                        </a>
+                    </div>
+                </div>
             </header>
 
             <section class="admin-welcome">
@@ -219,5 +244,37 @@
             </section>
         </main>
     </div>
+
+    <!-- ADMIN ACCOUNT DROPDOWN SCRIPT -->
+    <script>document.addEventListener("DOMContentLoaded", function () {
+            var toggle = document.getElementById("adminAccountToggle");
+            var menu = document.getElementById("adminAccountMenu");
+
+            if (!toggle || !menu) return;
+
+            toggle.addEventListener("click", function (e) {
+                e.stopPropagation();
+
+                var isOpen = menu.classList.toggle("show");
+                toggle.setAttribute("aria-expanded", isOpen);
+            });
+
+            menu.addEventListener("click", function (e) {
+                e.stopPropagation();
+            });
+
+            document.addEventListener("click", function () {
+                menu.classList.remove("show");
+                toggle.setAttribute("aria-expanded", "false");
+            });
+
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape") {
+                    menu.classList.remove("show");
+                    toggle.setAttribute("aria-expanded", "false");
+                }
+            });
+        });</script>
+
 </body>
 </html>

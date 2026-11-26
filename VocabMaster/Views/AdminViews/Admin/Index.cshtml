@@ -12,9 +12,9 @@
 
     <title>Admin Dashboard - VocabMaster</title>
 
-    <!-- Kết nối CSS dùng chung -->
+    <!-- CSS dùng chung -->
     <link rel="stylesheet"
-          href="@Url.Content("~/Content/site.css")" />
+          href="@Url.Content("~/Content/site.css")?v=10" />
 </head>
 
 <body>
@@ -24,11 +24,13 @@
         <!-- SIDEBAR -->
         <aside class="admin-sidebar">
 
+            <!-- LOGO -->
             <div class="admin-logo">
                 <h2>VocabMaster</h2>
                 <p>English Vocabulary Learning</p>
             </div>
 
+            <!-- WORKSPACE -->
             <div class="admin-workspace">
                 <span>ADMIN WORKSPACE</span>
             </div>
@@ -61,9 +63,11 @@
 
             <!-- SIDEBAR BOTTOM -->
             <div class="admin-sidebar-bottom">
+
                 <a href="@Url.Action("Index", "Home")">
                     Trở về học tập
                 </a>
+
             </div>
 
         </aside>
@@ -83,8 +87,49 @@
                     </p>
                 </div>
 
-                <div class="admin-role">
-                    Administrator
+                <!-- ADMIN ACCOUNT DROPDOWN -->
+                <div class="admin-account-dropdown">
+
+                    <button type="button"
+                            class="admin-role"
+                            id="adminAccountToggle"
+                            aria-expanded="false">
+
+                        <span class="admin-avatar">A</span>
+
+                        <span>Administrator</span>
+
+                        <span class="admin-arrow">&#9662;</span>
+
+                    </button>
+
+                    <!-- DROPDOWN MENU -->
+                    <div class="admin-account-menu"
+                         id="adminAccountMenu">
+
+                        <!-- ACCOUNT INFO -->
+                        <div class="admin-account-info">
+
+                            <strong>Administrator</strong>
+
+                            <span>Quản trị hệ thống</span>
+
+                        </div>
+
+                        <div class="admin-account-divider"></div>
+
+                        <!-- LOGOUT -->
+                        <a href="@Url.Action("Logout", "Account")"
+                           class="admin-logout">
+
+                            <span class="admin-logout-icon">&#10140;</span>
+
+                            <span>Đăng xuất</span>
+
+                        </a>
+
+                    </div>
+
                 </div>
 
             </header>
@@ -233,6 +278,55 @@
         </main>
 
     </div>
+
+
+    <!-- DROPDOWN SCRIPT -->
+    <script>document.addEventListener("DOMContentLoaded", function () {
+
+            var toggle = document.getElementById("adminAccountToggle");
+            var menu = document.getElementById("adminAccountMenu");
+
+            if (!toggle || !menu) return;
+
+            // Nhấn Administrator để mở / đóng menu
+            toggle.addEventListener("click", function (e) {
+
+                e.stopPropagation();
+
+                var isOpen = menu.classList.toggle("show");
+
+                toggle.setAttribute("aria-expanded", isOpen);
+
+            });
+
+            // Nhấn bên trong menu không đóng menu ngay
+            menu.addEventListener("click", function (e) {
+                e.stopPropagation();
+            });
+
+            // Nhấn ra ngoài để đóng menu
+            document.addEventListener("click", function () {
+
+                menu.classList.remove("show");
+
+                toggle.setAttribute("aria-expanded", "false");
+
+            });
+
+            // Nhấn ESC để đóng menu
+            document.addEventListener("keydown", function (e) {
+
+                if (e.key === "Escape") {
+
+                    menu.classList.remove("show");
+
+                    toggle.setAttribute("aria-expanded", "false");
+
+                }
+
+            });
+
+        });</script>
 
 </body>
 </html>

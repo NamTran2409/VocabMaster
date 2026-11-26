@@ -1,4 +1,5 @@
-﻿@model IEnumerable<VocabMaster.Models.Topic>
+﻿
+@model IEnumerable<VocabMaster.Models.Topic>
 
 @{
     ViewBag.Title = "Topics Management";
@@ -13,7 +14,8 @@
 
     <title>Topics Management - VocabMaster</title>
 
-    <link rel="stylesheet" href="@Url.Content("~/Content/site.css")" />
+    <link rel="stylesheet"
+          href="@Url.Content("~/Content/site.css")?v=12" />
 </head>
 
 <body>
@@ -77,8 +79,41 @@
                     <p>Quản lý danh sách chủ đề từ vựng trong hệ thống.</p>
                 </div>
 
-                <div class="admin-role">
-                    Administrator
+                <!-- ADMIN ACCOUNT DROPDOWN -->
+                <div class="admin-account-dropdown">
+
+                    <button type="button"
+                            class="admin-role"
+                            id="adminAccountToggle"
+                            aria-expanded="false">
+
+                        <span class="admin-avatar">A</span>
+                        <span>Administrator</span>
+                        <span class="admin-arrow">&#9662;</span>
+
+                    </button>
+
+                    <!-- ACCOUNT MENU -->
+                    <div class="admin-account-menu"
+                         id="adminAccountMenu">
+
+                        <div class="admin-account-info">
+                            <strong>Administrator</strong>
+                            <span>Quản trị hệ thống</span>
+                        </div>
+
+                        <div class="admin-account-divider"></div>
+
+                        <a href="@Url.Action("Logout", "Account")"
+                           class="admin-logout">
+
+                            <span class="admin-logout-icon">&#10140;</span>
+                            <span>Đăng xuất</span>
+
+                        </a>
+
+                    </div>
+
                 </div>
 
             </header>
@@ -278,6 +313,41 @@
         </main>
 
     </div>
+
+
+    <!-- ADMIN ACCOUNT DROPDOWN SCRIPT -->
+    <script>document.addEventListener("DOMContentLoaded", function () {
+
+            var toggle = document.getElementById("adminAccountToggle");
+            var menu = document.getElementById("adminAccountMenu");
+
+            if (!toggle || !menu) return;
+
+            toggle.addEventListener("click", function (e) {
+                e.stopPropagation();
+
+                var isOpen = menu.classList.toggle("show");
+
+                toggle.setAttribute("aria-expanded", isOpen);
+            });
+
+            menu.addEventListener("click", function (e) {
+                e.stopPropagation();
+            });
+
+            document.addEventListener("click", function () {
+                menu.classList.remove("show");
+                toggle.setAttribute("aria-expanded", "false");
+            });
+
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape") {
+                    menu.classList.remove("show");
+                    toggle.setAttribute("aria-expanded", "false");
+                }
+            });
+
+        });</script>
 
 </body>
 </html>
