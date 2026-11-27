@@ -1,4 +1,5 @@
-﻿@{
+﻿
+@{
     Layout = null;
     ViewBag.Title = "Đăng nhập";
 }
@@ -78,54 +79,9 @@
                            value="@ViewBag.Email" required />
 
                     <label for="password">Mật khẩu</label>
-
-                    <div class="password-field">
-                        <input id="password"
-                               name="password"
-                               type="password"
-                               autocomplete="current-password"
-                               placeholder="Nhập mật khẩu"
-                               required />
-
-                        <button type="button"
-                                class="password-toggle"
-                                id="togglePassword"
-                                aria-label="Hiển thị mật khẩu"
-                                title="Hiển thị mật khẩu">
-
-                            <!-- Mắt mở -->
-                            <svg class="eye-open" viewBox="0 0 24 24" fill="none">
-                                <path d="M2 12C4.2 7.8 7.6 5.5 12 5.5S19.8 7.8 22 12C19.8 16.2 16.4 18.5 12 18.5S4.2 16.2 2 12Z"
-                                      stroke="currentColor"
-                                      stroke-width="1.8"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round" />
-                                <circle cx="12" cy="12" r="3"
-                                        stroke="currentColor"
-                                        stroke-width="1.8" />
-                            </svg>
-
-                            <!-- Mắt đóng -->
-                            <svg class="eye-closed" viewBox="0 0 24 24" fill="none">
-                                <path d="M3 3L21 21"
-                                      stroke="currentColor"
-                                      stroke-width="1.8"
-                                      stroke-linecap="round" />
-                                <path d="M10 10A2.8 2.8 0 0 0 14 14"
-                                      stroke="currentColor"
-                                      stroke-width="1.8"
-                                      stroke-linecap="round" />
-                                <path d="M9.2 5.8C10.1 5.5 11 5.3 12 5.3C16.4 5.3 19.8 7.8 22 12C21.4 13.2 20.6 14.3 19.6 15.2"
-                                      stroke="currentColor"
-                                      stroke-width="1.8"
-                                      stroke-linecap="round" />
-                                <path d="M6.2 6.8C4.5 8.1 3.1 9.8 2 12C4.2 16.2 7.6 18.7 12 18.7C13.5 18.7 14.8 18.4 16 17.8"
-                                      stroke="currentColor"
-                                      stroke-width="1.8"
-                                      stroke-linecap="round" />
-                            </svg>
-                        </button>
-                    </div>
+                    <input id="password" name="password" type="password"
+                           autocomplete="current-password"
+                           placeholder="Nhập mật khẩu" required />
 
                     <div class="form-row">
                         <label class="check">
@@ -155,32 +111,5 @@
             <footer>© 2026 VocabMaster • English Vocabulary Learning</footer>
         </main>
     </div>
-
-    <script>
-        (function () {
-            var toggleButton = document.getElementById("togglePassword");
-            var passwordInput = document.getElementById("password");
-
-            if (!toggleButton || !passwordInput) return;
-
-            toggleButton.addEventListener("click", function () {
-                var isPassword = passwordInput.type === "password";
-
-                passwordInput.type = isPassword ? "text" : "password";
-
-                this.classList.toggle("is-visible", isPassword);
-
-                this.setAttribute(
-                    "aria-label",
-                    isPassword ? "Ẩn mật khẩu" : "Hiển thị mật khẩu"
-                );
-
-                this.setAttribute(
-                    "title",
-                    isPassword ? "Ẩn mật khẩu" : "Hiển thị mật khẩu"
-                );
-            });
-        })();
-    </script>
 </body>
-</html>
+</html>N

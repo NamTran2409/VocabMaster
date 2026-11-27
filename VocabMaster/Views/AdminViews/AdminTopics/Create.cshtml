@@ -14,63 +14,66 @@
     <title>Thêm chủ đề - VocabMaster Admin</title>
 
     <link rel="stylesheet"
-          <link rel="stylesheet" href="@Url.Content("~/Content/site.css")" /> />
+    <link rel="stylesheet" href="@Url.Content("~/Content/site.css")" />
 </head>
 <body>
 
     <div class="admin-container">
 
+
+        <!-- SIDEBAR -->
         <aside class="admin-sidebar">
+
             <div class="admin-logo">
                 <h2>VocabMaster</h2>
-                <p>ADMIN WORKSPACE</p>
+                <p>English Vocabulary Learning</p>
+            </div>
+
+            <div class="admin-workspace">
+                <span>ADMIN WORKSPACE</span>
             </div>
 
             <nav class="admin-navigation">
+
                 <a href="@Url.Action("Index", "Admin")">
-                    <span>▦</span> Dashboard
+                    Dashboard
                 </a>
 
-                <a class="active"
-                   href="@Url.Action("Index", "AdminTopics")">
-                    <span>📚</span> Quản lý chủ đề
+                <a href="@Url.Action("Index", "AdminTopics")"
+                   class="active">
+                    Topics Management
                 </a>
 
                 <a href="@Url.Action("Index", "AdminVocabulary")">
-                    <span>📝</span> Quản lý từ vựng
+                    Vocabulary Management
                 </a>
 
                 <a href="@Url.Action("Index", "AdminQuestions")">
-                    <span>❓</span> Quản lý câu hỏi
+                    Quiz Management
                 </a>
 
                 <a href="@Url.Action("Index", "AdminUsers")">
-                    <span>👥</span> Quản lý người dùng
+                    Users
                 </a>
+
             </nav>
 
             <div class="admin-sidebar-bottom">
                 <a href="@Url.Action("Index", "Home")">
-                    ← Về trang chủ
+                    Trở về học tập
                 </a>
-                <p>Quản trị hệ thống</p>
             </div>
+
         </aside>
 
         <main class="admin-main">
-
-            <header class="admin-header">
-                <div>
-                    <h2>Thêm chủ đề mới</h2>
-                    <p>Tạo chủ đề mới cho hệ thống học từ vựng</p>
-                </div>
-
                 <div class="admin-role">
-                    <span>👤</span>
-                    <div>
-                        <strong>Quản trị viên</strong>
-                        <small>ADMIN</small>
-                    </div>
+                    <!-- PAGE HEADER -->
+                    <header class="admin-header">
+                        <a href="@Url.Action("Index", "AdminTopics")"
+                           class="topic-cancel-button">
+                            ← Quay lại
+                        </a
                 </div>
             </header>
 
@@ -181,3 +184,4 @@
 
 </body>
 </html>
+
